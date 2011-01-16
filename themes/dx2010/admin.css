@@ -1,0 +1,13 @@
+#body table { font:14px Georgia, serif; }
+#body td { padding:3px; }
+#body .form td:first-child { width:200px !important; text-align:right; }
+#body .form td[colspan='2'] { text-align:center; }
+#body .form button { width:150px; height:30px; }
+#body .form textarea { width:440px !important; height:200px; font:14px Georgia, serif; }
+#body .form input { width:400px !important; font:14px Georgia, serif; }
+#body .form input.error { background:#fcc; }
+
+#body .items .name { width:40%; }
+#body .items .date { width:25%; }
+#body .items .type { text-align:center; }
+#body .items .even { background:#eee; }

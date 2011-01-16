@@ -1,0 +1,485 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <html xmlns="http://www.w3.org/1999/xhtml">
+		<head>
+			<!-- template designed by Marco Von Ballmoos -->
+			<title>Docs for page api.blog.php</title>
+			<link rel="stylesheet" href="../media/stylesheet.css" />
+			<meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1'/>
+		</head>
+		<body>
+			<div class="page-body">			
+<h2 class="file-name"><img src="../media/images/Page_logo.png" alt="File" style="vertical-align: middle">/api.blog.php</h2>
+
+<a name="sec-description"></a>
+<div class="info-box">
+	<div class="info-box-title">Description</div>
+	<div class="nav-bar">
+					<span class="disabled">Description</span> |
+											<a href="#sec-constants">Constants</a>
+			|									<a href="#sec-functions">Functions</a>
+			</div>
+	<div class="info-box-body">	
+		<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">DXAPI Blog Module</p>
+	<ul class="tags">
+				<li><span class="field">author:</span> Matt Hackmann &lt;<a href="mailto:matt@dxprog.com">matt@dxprog.com</a>&gt;</li>
+				<li><span class="field">license:</span> GPLv3</li>
+			</ul>
+		
+			</div>
+</div>
+		
+
+	
+	<a name="sec-constants"></a>	
+	<div class="info-box">
+		<div class="info-box-title">Constants</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+									<span class="disabled">Constants</span>
+			|										<a href="#sec-functions">Functions</a>
+					</div>
+		<div class="info-box-body">	
+			<a name="defineFULL_ADMIN"><!-- --></a>
+<div class="evenrow">
+	
+	<div>
+		<img src="../media/images/Constant.png" />
+		<span class="const-title">
+			<span class="const-name">FULL_ADMIN</span> = 3
+			(line <span class="line-number">10</span>)
+		</span>
+	</div>
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+		
+</div>
+		</div>
+	</div>
+	
+	
+	<a name="sec-functions"></a>	
+	<div class="info-box">
+		<div class="info-box-title">Functions</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+													<a href="#sec-constants">Constants</a>
+				|									<span class="disabled">Functions</span>
+		</div>
+		<div class="info-box-body">	
+			<a name="functionrpc_getArchives" id="functionrpc_getArchives"><!-- --></a>
+<div class="oddrow">
+	
+	<div>
+		<img src="../media/images/Function.png" />
+		<span class="method-title">rpc_getArchives</span> (line <span class="line-number">129</span>)
+	</div> 
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns a list of months/years where there are blog posts</p>
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			rpc_getArchives
+		</span>
+					([<span class="var-type">string</span>&nbsp;<span class="var-name">$type</span> = <span class="var-default">Output format. Valid options: json, xml, php. Required</span>])
+			</div>
+
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$type</span><span class="var-description">: Output format. Valid options: json, xml, php. Required</span>			</li>
+				</ul>
+		
+	
+</div>
+<a name="functionrpc_getComments" id="functionrpc_getComments"><!-- --></a>
+<div class="evenrow">
+	
+	<div>
+		<img src="../media/images/Function.png" />
+		<span class="method-title">rpc_getComments</span> (line <span class="line-number">271</span>)
+	</div> 
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns all of the comments associated with a post</p>
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			rpc_getComments
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$type</span>, <span class="var-type">int</span>&nbsp;<span class="var-name">$id</span>)
+			</div>
+
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$type</span><span class="var-description">: Output format. Valid options: rss, json, xml, php. Required</span>			</li>
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$id</span><span class="var-description">: ID of the post to retrieve comments from</span>			</li>
+				</ul>
+		
+	
+</div>
+<a name="functionrpc_getPopular" id="functionrpc_getPopular"><!-- --></a>
+<div class="oddrow">
+	
+	<div>
+		<img src="../media/images/Function.png" />
+		<span class="method-title">rpc_getPopular</span> (line <span class="line-number">409</span>)
+	</div> 
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Gets the most popular posts based on page views</p>
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			rpc_getPopular
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$type</span>, <span class="var-type">int</span>&nbsp;<span class="var-name">$mindate</span>, <span class="var-type">int</span>&nbsp;<span class="var-name">$mac</span>)
+			</div>
+
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$type</span><span class="var-description">: Output format. Valid options: rss, json, xml, php. Required</span>			</li>
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$mindate</span><span class="var-description">: Unix timestamp of how far back to calculate page views. Default: 1 week prior</span>			</li>
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$mac</span><span class="var-description">: Number of results to return</span>			</li>
+				</ul>
+		
+	
+</div>
+<a name="functionrpc_getPost" id="functionrpc_getPost"><!-- --></a>
+<div class="evenrow">
+	
+	<div>
+		<img src="../media/images/Function.png" />
+		<span class="method-title">rpc_getPost</span> (line <span class="line-number">326</span>)
+	</div> 
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns a single post</p>
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			rpc_getPost
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$type</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$perma</span>, <span class="var-type">int</span>&nbsp;<span class="var-name">$id</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$ip</span>)
+			</div>
+
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$type</span><span class="var-description">: Output format. Valid options: rss, json, xml, php. Required</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$perma</span><span class="var-description">: Perma-link of post to retrieve</span>			</li>
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$id</span><span class="var-description">: ID of post to retrieve</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$ip</span><span class="var-description">: IP of client retrieving post (used to calculate most popular)</span>			</li>
+				</ul>
+		
+	
+</div>
+<a name="functionrpc_getPosts" id="functionrpc_getPosts"><!-- --></a>
+<div class="oddrow">
+	
+	<div>
+		<img src="../media/images/Function.png" />
+		<span class="method-title">rpc_getPosts</span> (line <span class="line-number">21</span>)
+	</div> 
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns all blog posts with filter options. Posts are sorted by timestamp descending</p>
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			rpc_getPosts
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$type</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$tag</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$page</span>, <span class="var-type">int</span>&nbsp;<span class="var-name">$maxdate</span>, <span class="var-type">int</span>&nbsp;<span class="var-name">$mindate</span>, <span class="var-type">int</span>&nbsp;<span class="var-name">$max</span>)
+			</div>
+
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$type</span><span class="var-description">: Output format. Valid options: rss, json, xml, php. Required</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$tag</span><span class="var-description">: Tag name to filter posts by</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$page</span><span class="var-description">: Page of results to get</span>			</li>
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$maxdate</span><span class="var-description">: Unix timestamp of newest posts to retrieve</span>			</li>
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$mindate</span><span class="var-description">: Unix timestamp of oldest posts to retrieve</span>			</li>
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$max</span><span class="var-description">: Number of posts to return. Paging is based off this number. Default value = 15</span>			</li>
+				</ul>
+		
+	
+</div>
+<a name="functionrpc_getRelated" id="functionrpc_getRelated"><!-- --></a>
+<div class="evenrow">
+	
+	<div>
+		<img src="../media/images/Function.png" />
+		<span class="method-title">rpc_getRelated</span> (line <span class="line-number">218</span>)
+	</div> 
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns all of the comments associated with a post</p>
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			rpc_getRelated
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$type</span>, <span class="var-type">int</span>&nbsp;<span class="var-name">$max</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$perma</span>)
+			</div>
+
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$type</span><span class="var-description">: Output format. Valid options: rss, json, xml, php. Required</span>			</li>
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$max</span><span class="var-description">: Maximum number of posts to return</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$perma</span><span class="var-description">: Perma-link of post to get related items from</span>			</li>
+				</ul>
+		
+	
+</div>
+<a name="functionrpc_getTags" id="functionrpc_getTags"><!-- --></a>
+<div class="oddrow">
+	
+	<div>
+		<img src="../media/images/Function.png" />
+		<span class="method-title">rpc_getTags</span> (line <span class="line-number">172</span>)
+	</div> 
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns blog tags ordered by the tag's usage descending</p>
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			rpc_getTags
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$type</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$order</span>, <span class="var-type">int</span>&nbsp;<span class="var-name">$max</span>)
+			</div>
+
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$type</span><span class="var-description">: Output format. Valid options: json, xml, php. Required</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$order</span><span class="var-description">: The order in which to sort the results. Valid options: asc, desc</span>			</li>
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$max</span><span class="var-description">: Maximum number of results to return. Default = 10</span>			</li>
+				</ul>
+		
+	
+</div>
+<a name="functionrpc_logPageView" id="functionrpc_logPageView"><!-- --></a>
+<div class="evenrow">
+	
+	<div>
+		<img src="../media/images/Function.png" />
+		<span class="method-title">rpc_logPageView</span> (line <span class="line-number">382</span>)
+	</div> 
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Logs a view on a particular blog post</p>
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			rpc_logPageView
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$ip</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$id</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$ua</span>)
+			</div>
+
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$ip</span><span class="var-description">: IP address of requesting client</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$id</span><span class="var-description">: ID of post to log view on</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$ua</span><span class="var-description">: User-agent string of requesting client</span>			</li>
+				</ul>
+		
+	
+</div>
+<a name="functionrpc_postComment" id="functionrpc_postComment"><!-- --></a>
+<div class="oddrow">
+	
+	<div>
+		<img src="../media/images/Function.png" />
+		<span class="method-title">rpc_postComment</span> (line <span class="line-number">463</span>)
+	</div> 
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Adds a comment to the database</p>
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			rpc_postComment
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$type</span>, <span class="var-type">int</span>&nbsp;<span class="var-name">$id</span>)
+			</div>
+
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$type</span><span class="var-description">: Output format. Valid options: rss, json, xml, php. Required</span>			</li>
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$id</span><span class="var-description">: ID of post to add comment to</span>			</li>
+				</ul>
+		
+	
+</div>
+<a name="functionrpc_postCreateArticle" id="functionrpc_postCreateArticle"><!-- --></a>
+<div class="evenrow">
+	
+	<div>
+		<img src="../media/images/Function.png" />
+		<span class="method-title">rpc_postCreateArticle</span> (line <span class="line-number">548</span>)
+	</div> 
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Creates an article</p>
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			rpc_postCreateArticle
+		</span>
+				()
+			</div>
+
+		
+	
+</div>
+<a name="functionrpc_postEditArticle" id="functionrpc_postEditArticle"><!-- --></a>
+<div class="oddrow">
+	
+	<div>
+		<img src="../media/images/Function.png" />
+		<span class="method-title">rpc_postEditArticle</span> (line <span class="line-number">517</span>)
+	</div> 
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Edits an article</p>
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			rpc_postEditArticle
+		</span>
+					([<span class="var-type">int</span>&nbsp;<span class="var-name">$id</span> = <span class="var-default">ID of post to edit</span>])
+			</div>
+
+			<ul class="parameters">
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$id</span><span class="var-description">: ID of post to edit</span>			</li>
+				</ul>
+		
+	
+</div>
+<a name="functionrpc_publishArticle" id="functionrpc_publishArticle"><!-- --></a>
+<div class="evenrow">
+	
+	<div>
+		<img src="../media/images/Function.png" />
+		<span class="method-title">rpc_publishArticle</span> (line <span class="line-number">586</span>)
+	</div> 
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Publishes an article</p>
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			rpc_publishArticle
+		</span>
+					([<span class="var-type">int</span>&nbsp;<span class="var-name">$id</span> = <span class="var-default">ID of post to publish</span>])
+			</div>
+
+			<ul class="parameters">
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$id</span><span class="var-description">: ID of post to publish</span>			</li>
+				</ul>
+		
+	
+</div>
+<a name="function_checkLogin" id="function_checkLogin"><!-- --></a>
+<div class="oddrow">
+	
+	<div>
+		<img src="../media/images/Function.png" />
+		<span class="method-title">_checkLogin</span> (line <span class="line-number">615</span>)
+	</div> 
+
+	<!-- ========== Info from phpDoc block ========= -->
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			_checkLogin
+		</span>
+				()
+			</div>
+
+		
+	
+</div>
+<a name="function_createPerma" id="function_createPerma"><!-- --></a>
+<div class="evenrow">
+	
+	<div>
+		<img src="../media/images/Function.png" />
+		<span class="method-title">_createPerma</span> (line <span class="line-number">605</span>)
+	</div> 
+
+	<!-- ========== Info from phpDoc block ========= -->
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			_createPerma
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$Perma</span>)
+			</div>
+
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$Perma</span>			</li>
+				</ul>
+		
+	
+</div>
+		</div>
+	</div>
+	
+	<p class="notes" id="credit">
+		Documentation generated on Tue, 20 Jul 2010 00:51:13 -0500 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.3</a>
+	</p>
+	</div></body>
+</html>
