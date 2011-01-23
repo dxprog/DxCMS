@@ -5,12 +5,12 @@
 		<link rel="stylesheet" type="text/css" href="/global/css/code_styles.css" />
 		<link rel="stylesheet" type="text/css" href="/global/css/gallery_styles.css" />
 		<link rel="stylesheet" type="text/css" href="/global/css/jquery.lightbox-0.5.css" />
-		<link rel="stylesheet" type="text/css" href="/themes/dx2010/styles.css?20110105" />
+		<link rel="stylesheet" type="text/css" href="/themes/dx2010/styles.css?20110122" />
 		<link rel="alternate" type="application/rss+xml" title="dxprog's News Feed" href="http://feeds.feedburner.com/dxprog" />
 		<script type="text/javascript" src="/global/js/jquery-1.4.4.min.js"></script>
 		<script type="text/javascript" src="/global/js/jquery.lightbox-0.5.min.js"></script>
 		<script type="text/javascript" src="/global/js/jquery.swfobject.1-0-9.min.js"></script>
-		<script type="text/javascript" src="/global/js/dx.js?20110105"></script>
+		<script type="text/javascript" src="/global/js/dx.js?20110122"></script>
 		<!--[if IE]>
 		<script>
 			var e = ("abbr,article,aside,audio,canvas,datalist,details,figure,footer,header,hgroup,mark,menu,meter,nav,output,progress,section,time,video").split(',');
@@ -45,6 +45,13 @@
 			</section>
 			<section id="rightColumn">
 				{TWITTER}
+				<aside id="search">
+					<h2>Search</h2>
+					<form id="search">
+						<input type="text" />
+						<button>Go</button>
+					</form>
+				</aside>
 				<div id="ad">
 					{AD}
 				</div>
