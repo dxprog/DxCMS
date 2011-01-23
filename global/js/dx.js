@@ -355,6 +355,22 @@ gallery = function() {
 
 })(jQuery);
 
+/* Search */
+(function($) {
+	var
+	search = function(e) {
+		var query = $('#search input[type="text"]').val();
+		if (query.length > 0) {
+			window.location = '/search/' + query + '/';
+		}
+		e.preventDefault();
+	},
+	init = function() {
+		$('#search').submit(search);
+	};
+	$(init);
+}(jQuery));
+
 /* Lightbox for blog image galleries */
 $(function() {
 	if ($('.gallery a').length > 0) {
