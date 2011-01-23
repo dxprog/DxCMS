@@ -2,6 +2,7 @@
 
 define('POST_CACHE', 600); // Length of time to cache posts
 define('ENTRIES_PER_PAGE', 5);
+define('SEARCH_RESULTS_PER_PAGE', 15);
 
 function renderContent() {
 
@@ -270,6 +271,54 @@ function content_getPosts ()
 	
 }
 
+function content_getSearch() {
+
+	global $_title;
+
+	if ($_GET['q']) {
+		
+		// Switch to a basic template
+		DxDisplay::setTemplate('content_plain');
+		DxDisplay::setVariable('title', 'Search results - ' . $_title);
+		
+		// Do the search and start populating our outgoing object with related data
+		$obj = null;
+		$page = intVal($_GET['p']);
+		$obj->query = $_GET['q'];
+		$obj->results = Dx::call('content', 'search', array('q'=>$_GET['q'], 'noTags'=>true, 'page'=>$page, 'max'=>SEARCH_RESULTS_PER_PAGE));
+		$obj->speed = substr((string)$obj->results->metrics->gen_time, 0, 7);
+		$obj->count = $obj->results->body->count;
+		
+		// Figure up the paging buttons
+		$numPages = ceil($obj->results->body->count / SEARCH_RESULTS_PER_PAGE);
+		$localDir = str_replace ('index.php', '', $_SERVER['SCRIPT_NAME']);
+		$rawPage = preg_replace ('@/page/(\d+)/@', '/', str_replace ($localDir, '/', $_SERVER['REQUEST_URI']));
+		$obj->page = $page;
+		$obj->firstResult = $page * SEARCH_RESULTS_PER_PAGE - SEARCH_RESULTS_PER_PAGE + 1;
+
+		if ($numPages > $page) {
+			$obj->next = '/search/' . $obj->query . '/page/'.($page + 1).'/';
+		}
+		if ($page > 1) {
+			$obj->prev = '/search/' . $obj->query . '/page/'.($page - 1).'/';
+		}
+		
+		// Do formatting on the posts, strip out the HTML and truncate the body
+		$obj->results = $obj->results->body->results;
+		foreach ($obj->results as &$item) {
+			$item = _formatPost($item, true);
+			$item->date = date('F j, Y', $item->timestamp);
+			$item->body = preg_replace('/<[^>]*>/', '', $item->body);
+			$item->body = _truncateText($item->body, 140);
+		}
+		
+		// Display
+		$content = html_entity_decode(DxDisplay::compile($obj, 'content_search', 0, 0));
+		DxDisplay::setVariable('content', $content);
+	}
+
+}
+
 function content_getRelated($id) {
 	
 	global $_baseURI;
@@ -374,6 +423,21 @@ function revertXMLSafe ($string)
 	$replace = array ("\"", "'", ">", "<", "&");
 	$find = array ("&quot;", "&apos;", "&gt;", "&lt;", "&amp;");
 	return str_replace ($find, $replace, $string);
+}
+ 
+function _truncateText ($text, $length)
+{
+
+	$retVal = $text;
+	if (strlen ($text) > $length) {
+		$pos = $length;
+		while ($text{$pos} != " " && $text{$pos} != "." && $text{$pos} != "\n") {
+			$pos++;
+		}
+		return substr ($text, 0, $pos)."...";
+	}
+	return $retVal;
+
 }
  
 ?>
