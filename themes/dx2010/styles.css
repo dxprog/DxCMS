@@ -222,3 +222,7 @@ div#galleryItem { height:625px; width:0; margin:0 auto; background:#fff; positio
 #body .search a:hover { background:#f26716; color:#fff; padding:0 4px 0 0; }
 #body .search p { color:#000; padding-right:80px; }
 #body .search img { height:60px; width:60px; border:1px solid #000; padding:4px; display:block; position:absolute; right:0; top:12px; }
+
+#error { width:600px; margin:0 auto; }
+#error img { float:left; padding:0 15px 0 0; }
+#error h2 { text-transform:uppercase; font:bold 36px 'Trebuchet MS', sans-serif; padding:60px 0 0; }

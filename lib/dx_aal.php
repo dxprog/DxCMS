@@ -50,8 +50,10 @@ class Dx {
 	{
 		
 		// Extract the extra URL stuff from the path
-		if (isset($_GET['q'])) {
+		if (isset($_GET['q']) && $_GET['q'] != '/') {
+			
 			$url = substr($_GET['q'], 1);
+			$matchFound = false;
 			
 			// Load the rewrites configuration
 			$xml = simplexml_load_file('./config/rewrites.xml');
@@ -70,12 +72,18 @@ class Dx {
 								$_GET[$param[0]] = $param[1];
 							}
 						}
+						$matchFound = true;
 						break;
 					}
 				}
 			}
 			unset($xml);
+		} else {
+			// It's the base page, so match found
+			$matchFound = true;
 		}
+		
+		return $matchFound;
 		
 	}
 	

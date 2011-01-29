@@ -6,7 +6,9 @@ include('lib/auth_facebook.php');
 if (!isset($_GET['session'])) {
 
 	// Save the referrer to a cookie so we know where to go back to and then head off to Facebook
-	setcookie('lastPage', $_SERVER['HTTP_REFERER']);
+	if (isset($_SERVER['HTTP_REFERER'])) {
+		setcookie('lastPage', $_SERVER['HTTP_REFERER']);
+	}
 	$url = auth_getLoginUrl();
 	header('Location: '.$url);
 

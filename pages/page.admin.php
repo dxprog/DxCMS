@@ -101,7 +101,7 @@ function showContent($type) {
 	if (function_exists('showcontent' . $type)) {
 		$render = call_user_func('showcontent' . $type, $type);
 	} else {
-		$obj = Dx::call('content', 'getContent', array('contentType'=>$type), 0)->body;
+		$obj = Dx::call('content', 'getContent', array('contentType'=>$type, 'page'=>2), 0)->body;
 		for ($i = 0, $count = count($obj->content); $i < $count; $i++) {
 			$obj->content[$i]->displayDate = date('m/d/Y H:i:s', $obj->content[$i]->date);
 		}

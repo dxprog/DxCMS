@@ -5,7 +5,9 @@ include('lib/auth_twitter.php');
 // Bop the user over to twitter for authentication
 if (isset($_GET['redirect'])) {
 
-	setcookie('lastPage', $_SERVER['HTTP_REFERER']);
+	if (isset($_SERVER['HTTP_REFERER'])) {
+		setcookie('lastPage', $_SERVER['HTTP_REFERER']);
+	}
 	$url = auth_getTwitterUrl();
 	header('Location: '.$url);
 

@@ -27,7 +27,7 @@ function renderContent() {
 	$_extFormatPost = create_function ('$body', $formatPost."return \$body;");
 	
 	// If no action, default to main page
-	if (!$_GET['action']) {
+	if (!isset($_GET['action']) || !$_GET['action']) {
 		$_GET['action'] = 'posts';
 	}
 	
@@ -61,36 +61,42 @@ function content_getEntry ($error = "", $body = "")
 	
 	// Get the post and log a page view
 	$entry = Dx::call('content', 'getContent', array('perma'=>$_GET['perma']), 0);
-	$post = $entry->body->content[0];
-	Dx::call('content', 'logContentView', array('id'=>$post->id), 0);
-	$templateData->post = _formatPost($post);
+	if (null != $entry->body && is_array($entry->body->content) && $entry->status->ret_code == 0) {
+		$post = $entry->body->content[0];
+		Dx::call('content', 'logContentView', array('id'=>$post->id), 0);
+		$templateData->post = _formatPost($post);
 
-	// Set the page title
-	DxDisplay::setVariable('title', $templateData->post->title.' - '.$_title);
-	
-	// Check for flash content
-	$file = strtolower($post->meta->file);
-	if (strlen($file) > 0) {
-		$ext = explode('.', $file);
-		$templateData->post->meta->fileType = $ext[count($ext) - 1];
-	}
-	
-	// Get user comments if there are any to get
-	if ($post->children > 0) {
-		$comments = Dx::call('content', 'getContent', array('parent'=>$post->id, 'max'=>0, 'order'=>'asc', 'noCount'=>true, 'noTags'=>true), 0);
-		for ($i = 0, $count = sizeof($comments->body->content); $i < $count; $i++) {
-			$comments->body->content[$i] = _formatComment($comments->body->content[$i]);
+		// Set the page title
+		DxDisplay::setVariable('title', $templateData->post->title.' - '.$_title);
+		
+		// Check for flash content
+		if (isset($post->meta->file)) {
+			$file = strtolower($post->meta->file);
+			if (strlen($file) > 0) {
+				$ext = explode('.', $file);
+				$templateData->post->meta->fileType = $ext[count($ext) - 1];
+			}
 		}
-		$templateData->comments = $comments->body->content;
-	}
-	
-	// Get user info should there be some
-	$templateData->user = content_getUser();
+		
+		// Get user comments if there are any to get
+		if ($post->children > 0) {
+			$comments = Dx::call('content', 'getContent', array('parent'=>$post->id, 'max'=>0, 'order'=>'asc', 'noCount'=>true, 'noTags'=>true), 0);
+			for ($i = 0, $count = sizeof($comments->body->content); $i < $count; $i++) {
+				$comments->body->content[$i] = _formatComment($comments->body->content[$i]);
+			}
+			$templateData->comments = $comments->body->content;
+		}
+		
+		// Get user info should there be some
+		$templateData->user = content_getUser();
 
-	// Run the post and comments through the template
-	$retVal = html_entity_decode(DxDisplay::compile($templateData, "content_article"));
-	DxDisplay::setVariable('content', $retVal);
-	content_getRelated($post->id);
+		// Run the post and comments through the template
+		$retVal = html_entity_decode(DxDisplay::compile($templateData, "content_article"));
+		DxDisplay::setVariable('content', $retVal);
+		content_getRelated($post->id);
+	} else {
+		DxDisplay::showError($entry->status->code, 'Something broke along the way!');
+	}
 
 }
 

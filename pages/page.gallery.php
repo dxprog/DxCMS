@@ -23,7 +23,9 @@ $_extFormatPost = create_function ('$body', $formatPost."return \$body;");
 
 function renderContent() {
 
-	switch ($_GET['action']) {
+	$action = isset($_GET['action']) ? $_GET['action'] : null;
+
+	switch ($action) {
 		case 'item':
 			showGalleryItem($_GET['perma']);
 			break;
