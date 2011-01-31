@@ -30,7 +30,7 @@
 				</div>
 			</header>
 			<div class="body">
-				<xsl:copy-of select="//body/*" />
+				<xsl:valu-of select="//body" />
 			</div>
 		</article>
 	</xsl:template>

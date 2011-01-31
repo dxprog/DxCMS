@@ -18,7 +18,8 @@ function renderContent() {
 		}
 	} else {
 		
-		switch ($_GET['action']) {
+		$action = isset($_GET['action']) ? $_GET['action'] : null;
+		switch ($action) {
 			case 'new':
 				newContent($_GET['type']);
 				break;

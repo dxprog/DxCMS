@@ -11,7 +11,7 @@
 	<xsl:template match="sidebar_twitter">
 		<img src="{user/profile_image_url}" alt="{user/screen_name}" />
 		<p>
-			<xsl:copy-of select="text" />
+			<xsl:value-of select="text" disable-output-escaping="yes" />
 		</p>
 		<time datetime="2010-01-01T00:00:00">Tweeted <xsl:value-of select="created_at" /> ago</time>
 	</xsl:template>

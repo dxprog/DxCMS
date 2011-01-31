@@ -13,7 +13,7 @@ class SerializeXML {
 
 	public function serialize($data, $root) {
 		$retVal = $this->_serializeXml($data);
-		$retVal = '<'.$root.'>'.$retVal.'</'.$root.'>';
+		$retVal = '<?xml version="1.0" encoding="ISO-8859-1"?><'.$root.'>'.$retVal.'</'.$root.'>';
 		return $retVal;
 	}
 	
@@ -96,10 +96,10 @@ class SerializeXML {
 						$retVal = "<$tagName index=\"$val\">$n</$tagName>\n";
 						break;
 					case 'string':
-						$retVal = $this->_makeSafe($p[2]);
+						$retVal = '<![CDATA[' . $p[2] . ']]>';
 						break;
 					default:
-						$retVal = '<string>'.$this->_makeSafe($p[2]).'</string>';
+						$retVal = '<string><![CDATA[' . $p[2] . ']]></string>';
 						break;
 				}
 				break;
@@ -213,10 +213,6 @@ class SerializeXML {
 		
 		return $retVal;
 
-	}
-	
-	private static function _makeSafe($string) {
-		return str_replace(array('&amp;', '&'), array('&', '&amp;'), $string);
 	}
 
 }

@@ -23,7 +23,7 @@
 				<enclosure url="http://dxprog.com/{meta/thumb}" type="image/jpeg" />
 			</xsl:if>
 			<description>
-				<xsl:copy-of select="body/*" />
+				<xsl:value-of select="body" disable-output-escaping="yes" />
 				<xsl:if test="postBreak">
 					<a href="http://dxprog.com/entry/{perma}/">Click to Read Full Post</a>
 				</xsl:if>

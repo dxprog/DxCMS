@@ -61,7 +61,7 @@
 				</div>
 			</header>
 			<div class="body">
-				<xsl:copy-of select="body/*" />
+				<xsl:value-of select="body" disable-output-escaping="yes" />
 			</div>
 			<footer>
 				<ul>
@@ -116,7 +116,7 @@
 				<span class="user"><xsl:value-of select="meta/user_name" /></span>
 			</header>
 			<img src="{meta/user_avatar}" alt="{meta/user_name}" />
-			<xsl:copy-of select="body" />
+			<xsl:value-of select="body" disable-output-escaping="yes" />
 			<a href="#addComment" class="commentReply">Reply</a>
 		</article>
 	</xsl:template>

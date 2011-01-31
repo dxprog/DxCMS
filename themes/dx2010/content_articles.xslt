@@ -14,7 +14,6 @@
 					<a href="{content_articles/next}" class="newer">Newer Posts</a>
 				</xsl:when>
 			</xsl:choose>
-			&#160;
 		</footer>
 		<!-- SOCIAL INCLUDES -->
 		<script type="text/javascript" src="http://platform.twitter.com/widgets.js">&#160;</script>
@@ -59,7 +58,7 @@
 						</a>
 					</xsl:when>
 				</xsl:choose>
-				<xsl:copy-of select="body/*" />
+				<xsl:value-of select="body" disable-output-escaping="yes" />
 			</div>
 			<xsl:choose>
 				<xsl:when test="postBreak">

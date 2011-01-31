@@ -91,7 +91,7 @@ function content_getEntry ($error = "", $body = "")
 		$templateData->user = content_getUser();
 
 		// Run the post and comments through the template
-		$retVal = html_entity_decode(DxDisplay::compile($templateData, "content_article"));
+		$retVal = DxDisplay::compile($templateData, "content_article");
 		DxDisplay::setVariable('content', $retVal);
 		content_getRelated($post->id);
 	} else {
@@ -241,7 +241,7 @@ function content_getPosts ()
 	
 	// Grab the fifteen latest posts
 	$obj = Dx::call('content', 'getContent', array('offset'=>($page - 1) * ENTRIES_PER_PAGE, 'tag'=>$tag, 'mindate'=>$minDate, 'maxdate'=>$maxDate, 'max'=>ENTRIES_PER_PAGE, 'parent'=>0, 'contentType'=>$type));
-	if ($obj != null) {
+	if (null != $obj && $obj->status->ret_code == 0 && null != $obj->body) {
 		
 		// Format each entry
 		$arr = array();
@@ -268,8 +268,10 @@ function content_getPosts ()
 			$cacheKey = 'BlogHome_' . $page . '_' . $minDate . '_' . $maxDate . '_' . $tag . '_' . $type;
 		}
 		$t->articles = $arr;
-		$retVal = html_entity_decode(DxDisplay::compile($t, 'content_articles', $cacheKey, 0));
+		$retVal = DxDisplay::compile($t, 'content_articles', $cacheKey, 0);
 	
+	} else {
+		DxDisplay::showError($obj->status->ret_code, 'There was an error siplaying that page!');
 	}
 
 	DxDisplay::setVariable('title', $_title);
