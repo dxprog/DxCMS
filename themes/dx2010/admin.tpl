@@ -49,9 +49,18 @@
 						<button type="submit">Search</button>
 					</form>
 				</ul>
+				<h2>Site Options</h2>
+				<ul>
+					<li><a href="/admin/kvps/new/">Create New Option</a></li>
+					<li><a href="/admin/kvps/overview/">View Current Options</a></li>
+				</ul>
 				<h2>Blog</h2>
 				<ul>
 					<li><a href="/admin/blog/new/">New Blog Entry</a></li>
+					<li><a href="/admin/blog/overview/">Blog Entries</a></li>
+				</ul>
+				<h2>Gallery</h2>
+				<ul>
 					<li><a href="/admin/gallery/overview/">View Gallery Items</a></li>
 					<li><a href="/admin/gallery/new/">New Gallery Item</a></li>
 				</ul>

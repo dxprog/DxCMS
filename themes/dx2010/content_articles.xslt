@@ -16,7 +16,6 @@
 			</xsl:choose>
 		</footer>
 		<!-- SOCIAL INCLUDES -->
-		<script type="text/javascript" src="http://platform.twitter.com/widgets.js">&#160;</script>
 	</xsl:template>
 	
 	<xsl:template match="articles_item">
@@ -77,13 +76,10 @@
 						</a>
 					</li>
 					<li class="twitter">
-						<a href="http://twitter.com/share" class="twitter-share-button" data-url="http://dxprog.com/entry/{perma}/" data-count="none" data-via="dxprog">Tweet</a>
+						<a href="http://twitter.com/share?url=http://dxprog.com/entry/{perma}/" target="_blank" class="twitter-share-button">Tweet This!</a>
 					</li>
 					<li class="facebook">
-						<iframe frameborder="0">
-							<xsl:attribute name="src"><xsl:value-of select="concat('http://www.facebook.com/plugins/like.php?href=http://dxprog.com/entry/', perma, '/&amp;amp;layout=button_count&amp;amp;show_faces=true&amp;amp;width=250&amp;amp;action=like&amp;amp;show_faces=false&amp;amp;colorscheme=light&amp;amp;height=21')" /></xsl:attribute>
-							&#160;
-						</iframe>
+						<a href="http://www.facebook.com/sharer.php?u=http://dxprog.com/entry/{perma}/" target="_blank" class="facebook-share-button">Like This on Facebook</a>
 					</li>
 				</ul>
 			</footer>

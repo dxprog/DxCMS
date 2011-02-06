@@ -2,11 +2,11 @@
 <rewrites>
 	
 	<rule redirect="true">
-		<expr>^(blog)$</expr>
+		<expr>^blog$</expr>
 		<query_string>blog/</query_string>
 	</rule>
 	<rule>
-		<expr>^(blog)/$</expr>
+		<expr>^blog/$</expr>
 		<query_string>page=content&amp;action=posts&amp;type=$1</query_string>
 	</rule>
 	
@@ -17,6 +17,24 @@
 	<rule>
 		<expr>^(portfolio|art|video)/$</expr>
 		<query_string>page=gallery&amp;type=$1</query_string>
+	</rule>
+	
+	<!-- SEARCH -->
+	<rule redirect="true">
+		<expr>^search/([^/.]+)$</expr>
+		<query_string>/search/$1/</query_string>
+	</rule>
+	<rule>
+		<expr>^search/([^/.]+)/$</expr>
+		<query_string>page=content&amp;action=search&amp;q=$1&amp;p=1</query_string>
+	</rule>
+	<rule redirect="true">
+		<expr>^search/([^/.]+)/page/([\d]+)$</expr>
+		<query_string>/search/$1/page/$2/</query_string>
+	</rule>
+	<rule>
+		<expr>^search/([^/.]+)/page/([\d]+)/$</expr>
+		<query_string>page=content&amp;action=search&amp;q=$1&amp;p=$2</query_string>
 	</rule>
 	
 	<!-- MAIN PAGINATION -->
@@ -152,6 +170,10 @@
 		<expr>^comic/$</expr>
 		<query_string>page=comic</query_string>
 	</rule>
+	<rule redirect="true">
+		<expr>^comic/([^/.]+)$</expr>
+		<query_string>/comic/$1/</query_string>
+	</rule>
 	<rule>
 		<expr>^comic/([^/.]+)/$</expr>
 		<query_string>page=comic&amp;perma=$1</query_string>
@@ -183,11 +205,11 @@
 		<query_string>page=admin&amp;action=create&amp;type=$1</query_string>
 	</rule>
 	<rule>
-		<expr>^admin/([^/.]+)/edit/([0-9]+)/</expr>
+		<expr>^admin/([^/.]+)/edit/([^/.]+)/</expr>
 		<query_string>page=admin&amp;action=edit&amp;type=$1&amp;id=$2</query_string>
 	</rule>
 	<rule>
-		<expr>^admin/([^/.]+)/update/([0-9]+)/</expr>
+		<expr>^admin/([^/.]+)/update/([^/.]+)/</expr>
 		<query_string>page=admin&amp;action=update&amp;type=$1&amp;id=$2</query_string>
 	</rule>
 	<rule>

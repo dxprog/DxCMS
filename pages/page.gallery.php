@@ -1,7 +1,7 @@
 <?php
 
 // Include the content formatting functions
-include('./pages/ext/formatting.content.ext.php');
+include('./pages/ext/content.ext.formatting.php');
 
 // Create a list of all the blog related functions that are defined
 $t = get_defined_functions ();

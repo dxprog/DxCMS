@@ -68,9 +68,7 @@ class DxDisplay {
 			
 				// Run the transform and return the results
 				if (!$xml->loadXML($parseXml)) {
-					echo $parseXml;
-					echo '<!-- ERROR -->';
-					exit();
+					self::showError('XML Parse Error', 'Something went kablooie while rendering this page!');
 				}
 				$xsl->load('./themes/'.self::$theme.'/'.$template.'.xslt');
 				$t->importStyleSheet($xsl);

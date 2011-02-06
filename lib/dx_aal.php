@@ -4,7 +4,7 @@
  * DX API Abstraction Layer
  */
 
-define ("API_LOCATION", "http://beta.dxprog.com/api");
+define('API_LOCATION', '_internal');
 
 /**
  * Path to the API libraries
@@ -85,6 +85,26 @@ class Dx {
 		
 		return $matchFound;
 		
+	}
+	
+	/**
+	 * Wrapper to get a KVP via the API
+	 * @param string $key Name of option to retrieve
+	 * @return mixed Value of the key returned
+	 */
+	public static function getOption($key) {
+		$obj = self::call('kvp', 'get', array('key'=>$key));
+		return $obj->body;
+	}
+	
+	/**
+	 * Wrapper to set a KVP
+	 * @param string $key Name of option to set
+	 * @param mixed $value Value to store
+	 * @return Returns the success of the set
+	 */
+	public static function setOption($key, $value) {
+		return self::post('kvp', 'set', array('key'=>$key), $value);
 	}
 	
 	private static function _internal($module, $method, $params, $cache) {

@@ -5,7 +5,7 @@
 		<link rel="stylesheet" type="text/css" href="/global/css/code_styles.css" />
 		<link rel="stylesheet" type="text/css" href="/global/css/gallery_styles.css" />
 		<link rel="stylesheet" type="text/css" href="/global/css/jquery.lightbox-0.5.css" />
-		<link rel="stylesheet" type="text/css" href="/themes/dx2010/styles.css?20110105" />
+		<link rel="stylesheet" type="text/css" href="/themes/dx2010/styles.css?20110204" />
 		<link rel="alternate" type="application/rss+xml" title="dxprog's News Feed" href="http://feeds.feedburner.com/dxprog" />
 		<script type="text/javascript" src="/global/js/jquery-1.4.4.min.js"></script>
 		<script type="text/javascript" src="/global/js/jquery.lightbox-0.5.min.js"></script>
@@ -38,6 +38,7 @@
 				</ul>
 			</nav>
 		</header>
+		<h2 id="sectionHead"></h2>
 		<section id="content">
 			<section id="body" class="full">
 				{CONTENT}
@@ -46,14 +47,6 @@
 		<footer id="pageFooter">
 			<p>Copyright &copy; Matt Hackmann 2003-2010</p>
 		</footer>
-		<script type="text/javascript">
-		var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-		document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-		</script>
-		<script type="text/javascript">
-		try {
-			//var pageTracker = _gat._getTracker("UA-280226-1");
-			//pageTracker._trackPageview();
-		} catch(err) {}</script>
+		{GA}
 	</body>
 </html>

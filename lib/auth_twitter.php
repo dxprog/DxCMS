@@ -6,8 +6,8 @@ require_once ('twitteroauth/twitteroauth.php');
 /**
  * Keys to be used with Twitter's OAuth stuff
  */
-$GLOBALS["_twitterKey"] = "TWITTER_OATH_KEY";
-$GLOBALS["_twitterSecret"] = "TWITTER_OATH_SECRET";
+$GLOBALS["_twitterKey"] = Dx::getOption('twitter_key');
+$GLOBALS["_twitterSecret"] = Dx::getOption('twitter_secret');
 
 /**
  * Returns the URL to allow the user to login via Twitter
@@ -22,12 +22,12 @@ function auth_getTwitterUrl ()
 	$token = '';
 	
 	// Get or generate the OAuth token as need. Twitter tokens do not expire, so set a cookie for a damn long time
-	if (isset($_COOKIE['authToken'])) {
-		$token = $_COOKIE['authToken'];
+	if (isset($_COOKIE['twitterToken'])) {
+		$token = $_COOKIE['twitterToken'];
 	} else {
 		$token = $to->getRequestToken();
-		setcookie('authToken', $token['oauth_token'], time() + 31536000, '/');
-		setcookie('authSecret', $token['oauth_token_secret'], time() + 31536000, '/');
+		setcookie('twitterToken', $token['oauth_token'], time() + 86400, '/');
+		setcookie('twitterSecret', $token['oauth_token_secret'], time() + 86400, '/');
 	}
 
 	$url = $to->getAuthorizeUrl($token);
@@ -65,15 +65,22 @@ function auth_getTwitterAccessToken()
 	
 	$retVal = '';
 
-	if (isset($_COOKIE['authToken']) && isset($_COOKIE['authSecret'])) {
-		$authToken = $_COOKIE['authToken'];
-		$authSecret = $_COOKIE['authSecret'];
+	if (isset($_COOKIE['twitterToken']) && isset($_COOKIE['twitterSecret'])) {
+		$authToken = $_COOKIE['twitterToken'];
+		$authSecret = $_COOKIE['twitterSecret'];
 		$to = new TwitterOAuth($_twitterKey, $_twitterSecret, $authToken, $authSecret);
 		$token = $to->getAccessToken();
-		setcookie('authToken', $token['oauth_token'], time() + 31536000, '/');
-		setcookie('authSecret', $token['oauth_token_secret'], time() + 31536000, '/');
+		setcookie('twitterToken', $token['oauth_token'], time() + 86400, '/');
+		setcookie('twitterSecret', $token['oauth_token_secret'], time() + 86400, '/');
 	}
 	
 	return $token;
 	
+}
+
+function auth_signout()
+{
+	setcookie('twitterToken', '', time() - 86400);
+	setcookie('twitterSecret', '', time() - 86400);
+	setCookie('authType', '', time() - 86400);
 }

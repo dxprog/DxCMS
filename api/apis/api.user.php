@@ -38,7 +38,7 @@ class User {
 	public static function getUserFromSession() {
 		
 		$retVal = false;
-		$sess_key = $_COOKIE['sess_key'];
+		$sess_key = isset($_COOKIE['sess_key']) ? $_COOKIE['sess_key'] : null;
 		if ($sess_key) {
 			db_Connect();
 			$row = db_Fetch(db_Query('SELECT * FROM users WHERE user_sess="' . $sess_key . '"'));

@@ -7,6 +7,8 @@
 #body .form input { width:400px !important; font:14px Georgia, serif; }
 #body .form input.error { background:#fcc; }
 
+#body .items { width:100%; }
+#body .items th { background:#ccc; padding:3px 0; }
 #body .items .name { width:40%; }
 #body .items .date { width:25%; }
 #body .items .type { text-align:center; }

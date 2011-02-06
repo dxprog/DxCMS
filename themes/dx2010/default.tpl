@@ -5,12 +5,12 @@
 		<link rel="stylesheet" type="text/css" href="/global/css/code_styles.css" />
 		<link rel="stylesheet" type="text/css" href="/global/css/gallery_styles.css" />
 		<link rel="stylesheet" type="text/css" href="/global/css/jquery.lightbox-0.5.css" />
-		<link rel="stylesheet" type="text/css" href="/themes/dx2010/styles.css?20110122" />
+		<link rel="stylesheet" type="text/css" href="/themes/dx2010/styles.css?20110204" />
 		<link rel="alternate" type="application/rss+xml" title="dxprog's News Feed" href="http://feeds.feedburner.com/dxprog" />
 		<script type="text/javascript" src="/global/js/jquery-1.4.4.min.js"></script>
 		<script type="text/javascript" src="/global/js/jquery.lightbox-0.5.min.js"></script>
 		<script type="text/javascript" src="/global/js/jquery.swfobject.1-0-9.min.js"></script>
-		<script type="text/javascript" src="/global/js/dx.js?20110122"></script>
+		<script type="text/javascript" src="/global/js/dx.js?20110204"></script>
 		<!--[if IE]>
 		<script>
 			var e = ("abbr,article,aside,audio,canvas,datalist,details,figure,footer,header,hgroup,mark,menu,meter,nav,output,progress,section,time,video").split(',');
@@ -49,7 +49,7 @@
 				{TWITTER}
 				<aside id="search">
 					<h2>Search</h2>
-					<form id="search">
+					<form>
 						<input type="text" />
 						<button>Go</button>
 					</form>
@@ -76,14 +76,6 @@
 		<footer id="pageFooter">
 			<p>Copyright &copy; Matt Hackmann 2003-2010</p>
 		</footer>
-		<script type="text/javascript">
-		var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-		document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-		</script>
-		<script type="text/javascript">
-		try {
-			// var pageTracker = _gat._getTracker("UA-280226-1");
-			// pageTracker._trackPageview();
-		} catch(err) {}</script>
+		{GA}
 	</body>
 </html>

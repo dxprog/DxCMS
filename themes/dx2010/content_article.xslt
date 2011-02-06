@@ -3,7 +3,6 @@
 	<xsl:output method="html" />
 	<xsl:template match="/">
 		<xsl:apply-templates select="content_article/post" />
-		<script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
 		<script type="text/javascript" src="/global/js/md5.js"></script>
 		<xsl:apply-templates select="content_article/comments" />
 		<xsl:apply-templates select="content_article/user" />
@@ -72,13 +71,10 @@
 						</a>
 					</li>
 					<li class="twitter">
-						<a href="http://twitter.com/share" class="twitter-share-button" data-url="http://dxprog.com/entry/{perma}/" data-count="none" data-via="dxprog">Tweet</a>
+						<a href="http://twitter.com/share?url=http://dxprog.com/entry/{perma}/" target="_blank" class="twitter-share-button">Tweet This!</a>
 					</li>
 					<li class="facebook">
-						<iframe frameborder="0">
-							<xsl:attribute name="src"><xsl:value-of select="concat('http://www.facebook.com/plugins/like.php?href=http://dxprog.com/entry/', perma, '/&amp;amp;layout=button_count&amp;amp;show_faces=true&amp;amp;width=250&amp;amp;action=like&amp;amp;show_faces=false&amp;amp;colorscheme=light&amp;amp;height=21')" /></xsl:attribute>
-							&#160;
-						</iframe>
+						<a href="http://www.facebook.com/sharer.php?u=http://dxprog.com/entry/{perma}/" target="_blank" class="facebook-share-button">Like This on Facebook</a>
 					</li>
 				</ul>
 			</footer>
@@ -128,15 +124,20 @@
 			<form action="/post_comment/{//post/perma}/" method="post" id="commentForm">
 				<div class="left">
 					<img src="{avatar}" alt="Avatar" class="avatar" />
-					<xsl:if test="showSignIn = 'true'">
-						<input type="hidden" name="avatar" value="{avatar}" />
-						<a href="/auth_facebook.php" title="Login with Facebook">
-							<img src="/themes/dx2010/images/login_fb.png" alt="Login with Facebook" />
-						</a>
-						<a href="/auth_twitter.php?redirect" title="Login with Twitter">
-							<img src="/themes/dx2010/images/login_twitter.png" alt="Login with Twitter" />
-						</a>
-					</xsl:if>
+					<xsl:choose>
+						<xsl:when test="showSignIn = 'true'">
+							<input type="hidden" name="avatar" value="{avatar}" />
+							<a href="/auth_facebook.php" title="Login with Facebook">
+								<img src="/themes/dx2010/images/login_fb.png" alt="Login with Facebook" />
+							</a>
+							<a href="/auth_twitter.php?redirect" title="Login with Twitter">
+								<img src="/themes/dx2010/images/login_twitter.png" alt="Login with Twitter" />
+							</a>
+						</xsl:when>
+						<xsl:otherwise>
+							<a href="/auth_{auth_type}.php?signout">Signout</a>
+						</xsl:otherwise>
+					</xsl:choose>
 				</div>
 				<div class="right">
 					<xsl:choose>

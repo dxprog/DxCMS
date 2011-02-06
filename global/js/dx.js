@@ -366,7 +366,7 @@ gallery = function() {
 		e.preventDefault();
 	},
 	init = function() {
-		$('#search').submit(search);
+		$('#search form').submit(search);
 	};
 	$(init);
 }(jQuery));

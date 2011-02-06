@@ -12,8 +12,11 @@ class SerializeXML {
 	private $_dataSet;
 
 	public function serialize($data, $root) {
-		$retVal = $this->_serializeXml($data);
-		$retVal = '<?xml version="1.0" encoding="ISO-8859-1"?><'.$root.'>'.$retVal.'</'.$root.'>';
+		$retVal = '<?xml version="1.0"?><root />';
+		if (null !== $data) {
+			$retVal = $this->_serializeXml($data);
+			$retVal = '<?xml version="1.0" encoding="ISO-8859-1"?><'.$root.'>'.$retVal.'</'.$root.'>';
+		}
 		return $retVal;
 	}
 	

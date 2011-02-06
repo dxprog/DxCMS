@@ -6,53 +6,56 @@ function _formatPost ($post, $convBreak = false)
 	global $_baseURI, $_extFormatPost;
 	
 	// Format the tags
-	$cacheKey = 'formatted_content_'.$post->id;
-	$cacheResult = DxCache::Get($cacheKey);
-	$cacheResult = false;
-	if ($cacheResult === false) {
-		
-		// Break new lines in the body up into paragraphs and then run it through any post formatting extensions
-		if (!$post->meta->formatting) {
-			$body = htmlentities(htmlentities($post->body));
-			$body = implode ('</p><p>', explode (chr(13), $body));
-			$body = '<p>'.str_replace(array(chr(10), chr(13)), '', $body).'</p>';
-			$body = str_replace ('<p></p>', '', $body);
-			$body = preg_replace ("@\<p\>(\<div(.*?)\>(.*?)\</div\>)\</p\>@is", '$1', $body);
-			$post->body = $body;
-			$post = $_extFormatPost ($post);
+	if (is_object($post)) {
+		$cacheKey = 'formatted_content_'.$post->id;
+		$cacheResult = DxCache::Get($cacheKey);
+		$cacheResult = false;
+		if ($cacheResult === false) {
+			
+			// Break new lines in the body up into paragraphs and then run it through any post formatting extensions
+			$disableFormatting = isset($post->meta->formatting) ? $post->meta->formatting : false;
+			if (!$disableFormatting) {
+				$body = htmlentities(htmlentities($post->body));
+				$body = implode ('</p><p>', explode (chr(13), $body));
+				$body = '<p>'.str_replace(array(chr(10), chr(13)), '', $body).'</p>';
+				$body = str_replace ('<p></p>', '', $body);
+				$body = preg_replace ("@\<p\>(\<div(.*?)\>(.*?)\</div\>)\</p\>@is", '$1', $body);
+				$post->body = $body;
+				$post = $_extFormatPost ($post);
+			}
+			
+			$post->day = date("j", $post->date);
+			$post->month = date("M", $post->date);
+			$post->year = date("Y", $post->date);
+			$post->timestamp = $post->date;
+			$post->rfcDate = date("Y-m-d\TH:i:s", $post->date);
+			$post->date = date("F j, Y", $post->date);
+			
+			// Write to cache
+			DxCache::Set($cacheKey, $post);
+			
+		} else {
+			$post = $cacheResult;
 		}
 		
-		$post->day = date("j", $post->date);
-		$post->month = date("M", $post->date);
-		$post->year = date("Y", $post->date);
-		$post->timestamp = $post->date;
-		$post->rfcDate = date("Y-m-d\TH:i:s", $post->date);
-		$post->date = date("F j, Y", $post->date);
-		
-		// Write to cache
-		DxCache::Set($cacheKey, $post);
-		
-	} else {
-		$post = $cacheResult;
-	}
-	
-	// Cut off anything after the break tag
-	if ($convBreak) {
-		$t = explode ('[break]', $post->body);
-		$post->body = $t[0];
-		if (sizeof ($t) > 1) {
-			$post->postBreak = "break";
+		// Cut off anything after the break tag
+		if ($convBreak) {
+			$t = explode ('[break]', $post->body);
+			$post->body = $t[0];
+			if (sizeof ($t) > 1) {
+				$post->postBreak = "break";
+			}
+		} else {
+			$post->body = str_replace ("[break]", "<a name=\"break\"> </a>", $post->body);
 		}
-	} else {
-		$post->body = str_replace ("[break]", "<a name=\"break\"> </a>", $post->body);
-	}
-	
-	// Run some checks to make sure our paragraphs are properly closed
-	$lastOpenPara = strrpos($post->body, '<p>');
-	$lastClosePara = strrpos($post->body, '</p>');
-	
-	if ($lastOpenPara !== false && ($lastClosePara === false || $lastClosePara < $lastOpenPara)) {
-		$post->body .= '</p>';
+		
+		// Run some checks to make sure our paragraphs are properly closed
+		$lastOpenPara = strrpos($post->body, '<p>');
+		$lastClosePara = strrpos($post->body, '</p>');
+		
+		if ($lastOpenPara !== false && ($lastClosePara === false || $lastClosePara < $lastOpenPara)) {
+			$post->body .= '</p>';
+		}
 	}
 	
 	return $post;

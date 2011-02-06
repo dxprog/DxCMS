@@ -7,8 +7,9 @@ function renderContent() {
 	DxDisplay::setTemplate('admin');
 
 	$user = Dx::call('user', 'getUserFromSession', null, 0)->body;
+	$action = isset($_GET['action']) ? $_GET['action'] : null;
 	if ($user === false) {
-		if ($_GET['action'] == 'login') {
+		if ($action == 'login') {
 			$user = Dx::call('user', 'login', array('user'=>$_POST['username'], 'pass'=>md5($_POST['password'])));
 		}
 		if ($user === false) {
@@ -18,7 +19,6 @@ function renderContent() {
 		}
 	} else {
 		
-		$action = isset($_GET['action']) ? $_GET['action'] : null;
 		switch ($action) {
 			case 'new':
 				newContent($_GET['type']);
@@ -130,14 +130,19 @@ function showContentGallery($type) {
 
 function editContent($type, $id) {
 
-	if (is_numeric($id)) {
-	
-		$obj = Dx::call('content', 'getContent', array('id'=>$id), 0)->body->content[0];
-		$obj->displayDate = date('m/d/Y', $obj->date);
-		$render = DxDisplay::compile($obj, 'admin_' . $type . '_form');
-		DxDisplay::setVariable('content', $render);
-	
+	$render = '';
+
+	if (function_exists('editcontent' . $type)) {
+		$render = call_user_func('editcontent' . $type, $type, $id);
+	} else {
+		if (is_numeric($id)) {
+			$obj = Dx::call('content', 'getContent', array('id'=>$id), 0)->body->content[0];
+			$obj->displayDate = date('m/d/Y', $obj->date);
+			$render = DxDisplay::compile($obj, 'admin_' . $type . '_form');
+		}
 	}
+	
+	DxDisplay::setVariable('content', $render);	
 
 }
 

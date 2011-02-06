@@ -21,10 +21,11 @@ require_once('./api/apis/api.user.php');
 date_default_timezone_set('America/Chicago');
  
 // Define our globals
-$GLOBALS["_content"] = null;
-$GLOBALS["_sidebars"] = null;
-$GLOBALS["_api"] = 'http://api.dxprog.com/';
-$GLOBALS["_title"] = 'matt hackmann -&gt; web developer';
+$GLOBALS['_content'] = null;
+$GLOBALS['_sidebars'] = null;
+$GLOBALS['_api'] = 'http://api.dxprog.com/';
+$GLOBALS['_title'] = Dx::getOption('sitetitle');
+DxDIsplay::setVariable('title', $_title);
 
 // Get the URL where this script is being executed from
 $localDir = str_replace ('index.php', '', $_SERVER['SCRIPT_NAME']);
@@ -39,7 +40,7 @@ DxDisplay::setVariable('baseuri', $GLOBALS['_baseURI']);
 if (!Dx::urlRewrite()) {
 
 	// If the rewriter couldn't come up with anything, 
-	header("HTTP/1.1 404 Content Not Found");
+	header('HTTP/1.1 404 Content Not Found');
 	DxDisplay::showError(404, 'Sorry, but we couldn\'t find what you were looking for.');
 	
 } else {
@@ -54,9 +55,9 @@ if (!Dx::urlRewrite()) {
 	if (file_exists ('./config/config.' . $_page . '.php')) {
 		include ('./config/config.' . $_page . '.php');
 	}
-		
+
 	// Search for any related extensions and include them
-	$exp = '/(\w+).' . $_page . '.ext.php/';
+	$exp = '/(' . $_page . '|main).ext.(\w+).php/';
 	if ($dir = opendir ('./pages/ext')) {
 		while (($file = readdir ($dir)) !== false) {
 			if (preg_match ($exp, $file)) {

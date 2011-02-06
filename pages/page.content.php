@@ -91,7 +91,7 @@ function content_getEntry ($error = "", $body = "")
 		$templateData->user = content_getUser();
 
 		// Run the post and comments through the template
-		$retVal = DxDisplay::compile($templateData, "content_article");
+		$retVal = html_entity_decode(DxDisplay::compile($templateData, "content_article"));
 		DxDisplay::setVariable('content', $retVal);
 		content_getRelated($post->id);
 	} else {
@@ -120,7 +120,7 @@ function content_getUser()
 
 	$retVal = null;
 	
-	if (isset($_COOKIE['authType'])) {
+	if (isset($_COOKIE['authType']) && isset($_COOKIE['authUser'])) {
 		
 		$authType = $_COOKIE['authType'];
 		switch ($authType) {
@@ -241,7 +241,7 @@ function content_getPosts ()
 	
 	// Grab the fifteen latest posts
 	$obj = Dx::call('content', 'getContent', array('offset'=>($page - 1) * ENTRIES_PER_PAGE, 'tag'=>$tag, 'mindate'=>$minDate, 'maxdate'=>$maxDate, 'max'=>ENTRIES_PER_PAGE, 'parent'=>0, 'contentType'=>$type));
-	if (null != $obj && $obj->status->ret_code == 0 && null != $obj->body) {
+	if (null != $obj && $obj->status->ret_code == 0 && is_array($obj->body->content)) {
 		
 		// Format each entry
 		$arr = array();
@@ -268,7 +268,7 @@ function content_getPosts ()
 			$cacheKey = 'BlogHome_' . $page . '_' . $minDate . '_' . $maxDate . '_' . $tag . '_' . $type;
 		}
 		$t->articles = $arr;
-		$retVal = DxDisplay::compile($t, 'content_articles', $cacheKey, 0);
+		$retVal = html_entity_decode(DxDisplay::compile($t, 'content_articles', $cacheKey, 0));
 	
 	} else {
 		DxDisplay::showError($obj->status->ret_code, 'There was an error siplaying that page!');
@@ -439,7 +439,7 @@ function _truncateText ($text, $length)
 	$retVal = $text;
 	if (strlen ($text) > $length) {
 		$pos = $length;
-		while ($text{$pos} != " " && $text{$pos} != "." && $text{$pos} != "\n") {
+		while (isset($text{$pos}) && $text{$pos} != " " && $text{$pos} != "." && $text{$pos} != "\n") {
 			$pos++;
 		}
 		return substr ($text, 0, $pos)."...";

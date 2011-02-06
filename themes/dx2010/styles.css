@@ -58,6 +58,7 @@ a img { border:0; }
 #body article .tags a { font:bold 10px 'Trebuchet MS', sans-serif; text-transform:uppercase; color:#1a1e26; text-decoration:none; }
 #body article .tags a:hover { color:#f26716; }
 #body article .body { width:540px; margin:0 0 0 70px; }
+#body article .body ul { list-style:disc; padding:0 0 0 15px; margin:0 0 0 5px; }
 #body h4 { font:bold 16px Georgia, serif; margin:0 0 2px; }
 #body article p { margin:0 0 10px; }
 #body article p img { max-width:540px; display:block; margin:0 auto; }
@@ -141,6 +142,11 @@ label.error { color:#f00; }
 #twitter time, #music time { margin:5px 0 0 62px; font:bold 10px Georgia, serif; text-transform:uppercase; }
 #twitter a, #music a { color:#f26716; }
 #twitter a:hover, #music a:hover { text-decoration:none; }
+.twitter-share-button { background:url(images/tweet_button.png) no-repeat; display:block; width:55px; height:0px; padding:20px 0 0; overflow:hidden; }
+.twitter-share-button:hover { background-position:0 -21px; }
+
+.facebook-share-button { background:url(images/facebook_button.png) no-repeat; display:block; width:45px; height:0px; padding:20px 0 0; overflow:hidden; }
+.facebook-share-button:hover { background-position:0 -20px; }
 
 /* Tag Cloud */
 #tagCloud div { width:300px; font:22px Georgia, serif; }

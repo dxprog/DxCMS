@@ -4,13 +4,10 @@
  * Twitter integration for dxprog.com
  */
 
-// Include the TwitterOAuth framework
-require_once ("./config/config.twitter.php");
-
 function content_sidebarTwitter ()
 {
 	
-	global $twitter_user;
+	$twitter_user = Dx::getOption('twitter_user');
 	
 	$retVal = "";
 	$out = null;
@@ -21,10 +18,12 @@ function content_sidebarTwitter ()
 		$cacheKey = 'sidebar_twitter';
 		$data = DxCache::Get($cacheKey);
 		if ($data === false) {
-			$data = file_get_contents('http://twitter.com/statuses/user_timeline.json?screen_name='.$twitter_user.'&count=2');
-			$data = json_decode($data);
-			$data = $data[0];
-			DxCache::Set($cacheKey, $data);
+			$data = @file_get_contents('http://twitter.com/statuses/user_timeline.json?screen_name='.$twitter_user.'&count=2');
+			if ($data) {
+				$data = json_decode($data);
+				$data = $data[0];
+				DxCache::Set($cacheKey, $data);
+			}
 		}
 		$data->text = preg_replace('@http://([.\S]+)@is', '<a href="http://$1" target="_blank">http://$1</a>', $data->text);
 		$data->text = preg_replace('/@([.\S]+)/is', '@<a href="http://twitter.com/$1" title="Visit $1\'s twitter page" target="_blank">$1</a>', $data->text);
@@ -60,5 +59,3 @@ function _makeTwitterRelativeTime ($ts)
 	// Seconds
 	return $elapsed." second".($elapsed == 1 ? "" : "s");
 }
-
-?>

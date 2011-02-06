@@ -1,5 +1,6 @@
 <?php
 
+require('lib/dx_aal.php');
 include('lib/auth_twitter.php');
 
 // Bop the user over to twitter for authentication
@@ -10,6 +11,12 @@ if (isset($_GET['redirect'])) {
 	}
 	$url = auth_getTwitterUrl();
 	header('Location: '.$url);
+
+} else if (isset($_GET['signout'])) {
+
+	auth_signout();
+	// Use a JavaScript refresh so that the cookies get written
+	echo '<html><head><script type="text/javascript">window.location.href="' . $_SERVER['HTTP_REFERER'] . '#comments";</script></head></html>';
 
 } else {
 	
