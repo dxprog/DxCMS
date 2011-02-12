@@ -23,11 +23,17 @@ a img { border:0; }
 /* Header Styles */
 #pageHead { overflow:hidden; position:relative; }
 #pageHead h1 { background:url(images/logo.png) no-repeat; width:283px; height:0; padding:56px 0 0; margin:25px 0 5px; overflow:hidden; float:left; }
-#pageHead ul { float:right; position:absolute; bottom:0; right:0; padding:0 10px 5px; overflow:hidden; background:#a3bfaf; }
-#pageHead ul li { float:left; height:24px; padding:6px 10px 0; }
+#pageHead .nav { float:right; position:absolute; bottom:0; right:0; padding:0 10px 5px; overflow:hidden; background:#a3bfaf; }
+#pageHead .nav li { float:left; height:24px; padding:6px 10px 0; }
 #pageHead img { padding:2px 5px 0 0; }
 #pageHead img.last { padding-right:0; }
-#pageHead ul a { color:#fff; font:bold 18px 'Trebuchet MS', sans-serif; text-transform:uppercase; text-decoration:none; }
+#pageHead .nav a { color:#fff; font:bold 18px 'Trebuchet MS', sans-serif; text-transform:uppercase; text-decoration:none; }
+#pageHead .social { position:absolute; right:0; top:19px; overflow:hidden; }
+#pageHead .social li { float:left; }
+#pageHead .social a { display:block; width:44px; height:0; padding:32px 0 0; background:url(images/social_tabs.png) no-repeat; margin:0 15px 0 0; overflow:hidden; }
+#pageHead .twitter a { background-position:-44px 0; }
+#pageHead .rss:hover a { background-position:0 -32px; display:block; }
+#pageHead .twitter:hover a { background-position:-44px -32px; display:block; }
 
 /* Featured item rotator */
 #featured { display:block; width:960px; height:300px; overflow:hidden; position:relative; background:url(/themes/dx2010/images/featured_progress.png) no-repeat -960px 100%; }
@@ -73,7 +79,7 @@ a img { border:0; }
 #body article .comments .label { padding:6px 11px 0 19px; }
 #body article .comments .count { padding:6px 6px 10px 4px; }
 #body article .facebook iframe { border:none; overflow:hidden; width:250px; height:21px; }
-#body article .more { padding:5px 25px; background:#1a1e26; position:absolute; right:0; bottom:30px; padding:3px 20px 1px; font:bold 14px 'Trebuchet MS', sans-serif; text-decoration:none; color:#fff; text-transform:uppercase; }
+#body article .more { padding:5px 25px; background:#1a1e26; position:absolute; right:0; bottom:27px; padding:3px 20px 1px; font:bold 14px 'Trebuchet MS', sans-serif; text-decoration:none; color:#fff; text-transform:uppercase; }
 #body article .more:hover { background:#f26716; }
 #body article blockquote { margin:10px; font:italic 14px/1.6em "Trebuchet MS", Sans-serif; background:url(images/quotes.png) no-repeat 470px 100%; }
 #body article blockquote span { display:block; background:url(images/quotes.png) no-repeat -53px 0; padding:20px; }

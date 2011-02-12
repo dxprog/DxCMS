@@ -15,7 +15,7 @@
 			</xsl:for-each>
 		</ul>
 		<script type="text/javascript">
-			featured();
+			dx.featured();
 		</script>
 	</xsl:template>
 	

@@ -103,7 +103,7 @@ function ext_formatPostMarkup ($post)
 					"<h4>\$1</h4>",
 					"<ul>\$1</ul>",
 					"<li>\$1</li>",
-					"<div id=\"ytd_\$1\"><script type=\"text/javascript\">$(\"#ytd_\$1\").flash ({swf:\"http://www.youtube.com/v/\$1?enablejsapi=1&playerapiid=ytp_\$1\", width:540, height:304});</script></div>",
+					'<div id="ytd_$1"><script type="text/javascript">$(\'#ytd_$1\').youtube(\'$1\');</script></div>',
 					"<blockquote><span><p>\$1</p></span></blockquote>",
 					"<div id=\"flash_embed\"><script type=\"text/javascript\">\$(function(){\$(\"#flash_embed\").flash({swf:\"\$1\", width:630, height:375})});</script></div>");
 					

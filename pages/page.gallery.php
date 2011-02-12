@@ -21,6 +21,9 @@ foreach ($_methods as $func=>$val) {
 }
 $_extFormatPost = create_function ('$body', $formatPost."return \$body;");
 
+/**
+ * Content rendering logic
+ */
 function renderContent() {
 
 	$action = isset($_GET['action']) ? $_GET['action'] : null;
@@ -36,6 +39,9 @@ function renderContent() {
 
 }
 
+/**
+ * Renders gallery content selecting out a particular content type
+ */
 function showAllGalleryItems($type = null) {
 	
 	global $_title;
@@ -52,27 +58,34 @@ function showAllGalleryItems($type = null) {
 	
 }
 
+/**
+ * Gets a gallery item and displays it in a "chromeless" template
+ */
 function showGalleryItem($perma) {
 	
 	global $_title;
 	
 	// Get the item from the database and log a view on it
-	$item = Dx::call('content', 'getContent', array('perma'=>$perma))->body->content[0];
-	$entry = Dx::call('content', 'getContent', array('perma'=>$_GET['perma']), 0);
-	
-	$obj = null;
-	$obj->post = _formatPost($item, true);
-	
-	// Check for flash content
-	$file = strtolower($obj->post->meta->file);
-	if (strlen($file) > 0) {
-		$ext = explode('.', $file);
-		$obj->post->meta->fileType = $ext[count($ext) - 1];
+	$item = Dx::call('content', 'getContent', array('perma'=>$perma));
+	if (isset($item->body->content) && count($item->body->content) > 0) {
+		$item = $item->body->content[0];
+		
+		$obj = null;
+		$obj->post = _formatPost($item, true);
+		
+		// Check for flash content
+		$file = strtolower($obj->post->meta->file);
+		if (strlen($file) > 0) {
+			$ext = explode('.', $file);
+			$obj->post->meta->fileType = $ext[count($ext) - 1];
+		}
+		
+		$render = DxDisplay::compile($obj, 'content_article');
+		DxDisplay::setTemplate('gallery_item');
+		DxDisplay::setVariable('title', $obj->post->title . ' - ' . $_title);
+		DxDisplay::setVariable('content', $render);
+	} else {
+		DxDisplay::showError(404, 'We weren\'t able to find what you were looking for.');
 	}
-	
-	$render = DxDisplay::compile($obj, 'content_article');
-	DxDisplay::setTemplate('gallery_item');
-	DxDisplay::setVariable('title', $obj->post->title . ' - ' . $_title);
-	DxDisplay::setVariable('content', $render);
 	
 }

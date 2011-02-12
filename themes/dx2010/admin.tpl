@@ -8,7 +8,7 @@
 		<link rel="stylesheet" type="text/css" href="/themes/dx2010/admin.css" />
 		<link rel="stylesheet" type="text/css" href="/global/css/ui-lightness/jquery-ui-1.8.7.custom.css" />
 		<link rel="stylesheet" type="text/css" href="/global/css/jquery.lightbox-0.5.css" />		
-		<script type="text/javascript" src="/global/js/jquery-1.4.4.min.js"></script>
+		<script type="text/javascript" src="/global/js/jquery-1.5.min.js"></script>
 		<script type="text/javascript" src="/global/js/jquery-ui-1.8.7.custom.min.js"></script>
 		<script type="text/javascript" src="/global/js/jquery.lightbox-0.5.min.js"></script>
 		<script type="text/javascript" src="/global/js/jquery.swfobject.1-0-9.min.js"></script>
@@ -26,13 +26,17 @@
 		<header id="pageHead">
 			<h1>matt hackmann - web developer - artist - nerd</h1>
 			<nav>
-				<ul>
+				<ul class="nav">
 					<li><a href="/">Home</a></li>
 					<li><a href="/portfolio/">Portfolio</a></li>
 					<li><a href="/art/">Art</a></li>
 					<li><a href="/video/">Videos</a></li>
 					<li><a href="/comic/">Comics</a></li>
 					<li><a href="/contact/">Contact</a></li>
+				</ul>
+				<ul class="social">
+					<li class="rss"><a href="http://feeds.feedburner.com/dxprog" title="Subscribe to my RSS feed" target="_blank">Subscribe to my RSS feed</a></li>
+					<li class="twitter"><a href="http://twitter.com/dxprog" title="Follow me on Twitter" target="_blank">Follow me on Twitter</a></li>
 				</ul>
 			</nav>
 		</header>

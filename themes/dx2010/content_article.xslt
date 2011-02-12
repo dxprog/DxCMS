@@ -15,7 +15,7 @@
 					<xsl:choose>
 						<xsl:when test="meta/fileType = 'swf'">
 							<script type="text/javascript">
-								dx.flash({swf:'<xsl:value-of select="meta/file" />', width:<xsl:value-of select="meta/width" />, height:<xsl:value-of select="meta/height" />});
+								$(function(){dx.flash({swf:'<xsl:value-of select="meta/file" />', width:<xsl:value-of select="meta/width" />, height:<xsl:value-of select="meta/height" />})});
 							</script>
 						</xsl:when>
 						<xsl:otherwise>
@@ -94,7 +94,7 @@
 			<xsl:apply-templates select="comments_item" />
 		</section>
 		<script type="text/javascript">
-			comments();
+			dx.comments();
 		</script>
 	</xsl:template>
 	

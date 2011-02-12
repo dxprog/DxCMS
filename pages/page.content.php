@@ -61,7 +61,7 @@ function content_getEntry ($error = "", $body = "")
 	
 	// Get the post and log a page view
 	$entry = Dx::call('content', 'getContent', array('perma'=>$_GET['perma']), 0);
-	if (null != $entry->body && is_array($entry->body->content) && $entry->status->ret_code == 0) {
+	if (null != $entry->body && isset($entry->body->content) && $entry->status->ret_code == 0) {
 		$post = $entry->body->content[0];
 		Dx::call('content', 'logContentView', array('id'=>$post->id), 0);
 		$templateData->post = _formatPost($post);
@@ -95,7 +95,7 @@ function content_getEntry ($error = "", $body = "")
 		DxDisplay::setVariable('content', $retVal);
 		content_getRelated($post->id);
 	} else {
-		DxDisplay::showError($entry->status->code, 'Something broke along the way!');
+		DxDisplay::showError($entry->status->ret_code, 'Something broke along the way!');
 	}
 
 }

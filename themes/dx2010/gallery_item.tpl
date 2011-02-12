@@ -11,7 +11,7 @@
 			#content, #body { width:750px !important; }
 		</style>
 		<link rel="alternate" type="application/rss+xml" title="dxprog's News Feed" href="http://feeds.feedburner.com/dxprog" />
-		<script type="text/javascript" src="/global/js/jquery-1.4.4.min.js"></script>
+		<script type="text/javascript" src="/global/js/jquery-1.5.min.js"></script>
 		<script type="text/javascript" src="/global/js/jquery.lightbox-0.5.min.js"></script>
 		<script type="text/javascript" src="/global/js/jquery.swfobject.1-0-9.min.js"></script>
 		<script type="text/javascript" src="/global/js/dx.js?20110105"></script>

@@ -21,7 +21,7 @@
 			</div>
 		</div>
 		<script type="text/javascript">
-			gallery();
+			dx.gallery();
 		</script>
 	</xsl:template>
 	
