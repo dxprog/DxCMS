@@ -16,6 +16,7 @@ require_once("./lib/dx_display.php");
 require_once('./api/apis/api.content.php');
 require_once('./api/apis/api.comic.php');
 require_once('./api/apis/api.user.php');
+require_once('./api/apis/api.poll.php');
 
 // Set the time zone
 date_default_timezone_set('America/Chicago');

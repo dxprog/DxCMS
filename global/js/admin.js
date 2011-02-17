@@ -1,3 +1,5 @@
+var admin = {};
+
 (function() {
 	var
 	submitOkay = true,
@@ -16,7 +18,7 @@
 		}
 	},
 	titleBlur = function(e) {
-		titleKeyUp();
+		titleKeyDown();
 		perma = $('#perma').val();
 		$.ajax({
 			url:'/api/?type=json&method=content.getContent&perma=' + perma,
@@ -66,3 +68,56 @@
 	};
 	$(init);
 })();
+
+admin.poll = function() {
+
+	var
+	
+	items = [],
+	
+	// Callbacks
+	addItem = function(e) {
+		var val = $('#item').val();
+		items.push(val);
+		$('#item').val('').focus();
+		renderItems();
+	},
+	
+	removeItem = function(e) {
+		var rel = $(e.target).attr('rel');
+		if (rel) {
+			items[rel] = null;
+		}
+		renderItems();
+	},
+	
+	formSubmit = function(e) {
+		var i, count, out = '';
+		for (i = 0, count = items.length; i < count; i++) {
+			if (null != items[i]) {
+				out += items[i] + (i + 1 < count ? ',' : '');
+			}
+		}
+		alert(out);
+		$('#items').val(out);
+	},
+
+	renderItems = function() {
+		var i, count, out = '';
+		for (i = 0, count = items.length; i < count; i++) {
+			if (null != items[i]) {
+				out += '<li><a href="javascript:void(0);" class="removeItem" rel="' + i + '">Remove Item</a>' + items[i] + '</li>';
+			}
+		}
+		$('#itemList').html(out);
+		$('.removeItem').click(removeItem);
+	},
+	
+	init = function() {
+		$('.addItem').click(addItem);
+		$('#body form').submit(formSubmit);
+	};
+	
+	$(init);
+
+};

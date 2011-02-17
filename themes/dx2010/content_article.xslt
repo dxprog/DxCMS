@@ -61,6 +61,41 @@
 			</header>
 			<div class="body">
 				<xsl:value-of select="body" disable-output-escaping="yes" />
+				<xsl:if test="type = 'poll'">
+					<xsl:choose>
+						<xsl:when test="voted = '1'">
+							<div class="graph">
+								<h4><xsl:value-of select="title" /></h4>
+								<ul>
+									<xsl:for-each select="meta/meta_item">
+										<li>
+											<span><xsl:value-of select="title" /></span>
+											<xsl:if test="percent &gt; 0">
+												<div class="bar" style="width:{percent div 2}%"></div>
+											</xsl:if>
+											<div class="data"><xsl:value-of select="percent" />% - <xsl:value-of select="votes" /> vote<xsl:if test="votes != '1'">s</xsl:if></div>
+										</li>
+									</xsl:for-each>
+								</ul>
+							</div>
+						</xsl:when>
+						<xsl:otherwise>
+							<form action="/poll/vote/{perma}/" method="post" name="poll{id}" id="poll{id}" class="poll">
+								<h4><xsl:value-of select="title" /></h4>
+								<ul>
+									<xsl:for-each select="meta/meta_item">
+										<li>
+											<input type="radio" value="{id}" name="poll_option" id="poll{id}_option{position()}" />
+											<label for="poll{id}_option{position()}"><xsl:value-of select="title" /></label>
+										</li>
+									</xsl:for-each>
+								</ul>
+								<button type="submit">Vote</button>
+							</form>
+							<script type="text/javascript">dx.poll(<xsl:value-of select="id" />);</script>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:if>
 			</div>
 			<footer>
 				<ul>

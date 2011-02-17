@@ -13,3 +13,6 @@
 #body .items .date { width:25%; }
 #body .items .type { text-align:center; }
 #body .items .even { background:#eee; }
+
+.addItem { display:block; overflow:hidden; width:16px; height:0; padding:16px 0 0; background:url(images/add.png); float:right; }
+.removeItem { display:block; overflow:hidden; width:16px; height:0; padding:16px 0 0; background:url(images/delete.png); float:left; }

@@ -12,6 +12,56 @@ define('HITS_CACHE_TIMEOUT', 600);
  
 class Content {
  
+	/**
+	 * Content ID
+	 */
+	public $id;
+	
+	/**
+	 * Title of content
+	 */
+	public $title;
+	
+	/**
+	 * Perma ID of content
+	 */
+	public $perma;
+	
+	/**
+	 * Content type identifier
+	 */
+	public $type;
+	
+	/**
+	 * Date of content
+	 */
+	public $date;
+	
+	/**
+	 * Content body
+	 */
+	public $body;
+	
+	/**
+	 * Content parent
+	 */
+	public $parent;
+	
+	/**
+	 * Meta information
+	 */
+	public $meta;
+	
+	/**
+	 * Array of tags associated with this content item
+	 */
+	public $tags;
+	
+	/**
+	 * Ratings associated with this item
+	 */
+	public $ratings;
+ 
 	public static function getContent($vars) {
 
 		// Get the properties passed
@@ -115,7 +165,7 @@ class Content {
 		}
 		
 		// If there isn't anything to get, don't get it
-		if ($retVal->count > 0 || $noCount) {
+		if ($noCount || $retVal->count > 0) {
 			$query = 'SELECT ' . $select . $count . ' FROM content c ';
 			$where .= '1 ORDER BY c.content_date ' . $order . ' ';
 			$query .= $join . 'WHERE ' . $where;
@@ -129,15 +179,14 @@ class Content {
 			$retVal->content = array();
 			while ($row = db_Fetch($result)) {
 				$obj = null;
-				$obj->id = $row->content_id;
-				$obj->title = $row->content_title;
-				$obj->title = $row->content_title;
-				$obj->perma = $row->content_perma;
-				$obj->date = $row->content_date;
-				$obj->body = $row->content_body;
-				$obj->type = $row->content_type;
-				$obj->children = $row->children_count;
-				$obj->meta = unserialize($row->content_meta);
+				$obj->id = isset($row->content_id) ? $row->content_id : null;
+				$obj->title = isset($row->content_title) ? $row->content_title : null;
+				$obj->perma = isset($row->content_perma) ? $row->content_perma : null;
+				$obj->date = isset($row->content_date) ? $row->content_date : null;
+				$obj->body = isset($row->content_body) ? $row->content_body : null;
+				$obj->type = isset($row->content_type) ? $row->content_type : null;
+				$obj->children = $noCount === false ? $row->children_count : 0;
+				$obj->meta = isset($row->content_meta) ? unserialize($row->content_meta) : null;
 				if (!$noTags) {
 					$obj->tags = self::getTags(array('id'=>$obj->id, 'noCount'=>true));
 				}
@@ -163,8 +212,8 @@ class Content {
 		$max = isset($vars['max']) ? $vars['max'] : 25;
 		$mindate = isset($vars['mindate']) ? $vars['mindate'] : 0;
 		$maxdate = isset($vars['maxdate']) ? $vars['maxdate'] : time();
-		$type = $vars['type'];
-		$noCount = isset($vars['noCount']) && $vars['noCount'] === true ? null : $count = 'count(*) AS tag_count, ';
+		$type = isset($vars['type']) ? $vars['type'] : '';
+		$noCount = isset($vars['noCount']) && $vars['noCount'] === true ? $count = null : $count = 'count(*) AS tag_count, ';
 		
 		// Build the query
 		db_Connect();
@@ -201,7 +250,7 @@ class Content {
 		while ($row = db_Fetch($result)) {
 			$t = null;
 			$t->name = $row->tag_name;
-			$t->count = $row->tag_count;
+			$t->count = isset($row->tag_count) ? $row->tag_count : 0;
 			$retVal[] = $t;
 		}
 
@@ -238,6 +287,7 @@ class Content {
 		// Fancy caching happens here
 		global $_apiPath;
 		$cacheKey = 'ContentHits';
+		$forceWrite = isset($vars['forceWrite']) ? $vars['forceWrite'] : false;
 		$hits = DxCache::Get($cacheKey);
 		if ($hits === false) {
 			$hits = array();
@@ -262,7 +312,7 @@ class Content {
 			$lastStore = DxCache::Get('ContentHits_Date');
 
 			// If we've hit the threshold (count or timeout), dump all of the hits into the database
-			if (count($hits) >= HITS_CACHE_THRESHOLD || $lastStore + HITS_CACHE_TIMEOUT < time()) {
+			if (count($hits) >= HITS_CACHE_THRESHOLD || $lastStore + HITS_CACHE_TIMEOUT < time() || $forceWrite) {
 				db_Connect();
 				$query = 'INSERT INTO hits VALUES ';
 				foreach ($hits as $hit) {
@@ -298,6 +348,7 @@ class Content {
 		$retVal = array();
 		
 		// If no valid timestamp was passed, we'll default to one week
+		$vars['mindate'] = isset($vars['mindate']) ? $vars['mindate'] : time() - 604800;
 		if (!is_numeric($vars['mindate'])) {
 			$vars['mindate'] = time() - 604800;
 		}
@@ -354,7 +405,11 @@ class Content {
 	public static function syncContent($vars, $obj) {
 	
 		$id = is_numeric($obj->id) ? intVal($obj->id) : null;
-
+		
+		// Fix up the date and perma should they be missing
+		$obj->date = isset($obj->date) ? $obj->date : time();
+		$obj->perma = isset($obj->perma) ? $obj->perma : self::_createPerma($obj->title);
+		
 		db_Connect();
 		
 		if ($id !== null && $id > 0) {
@@ -503,4 +558,19 @@ class Content {
 		
 	}
 
+	/**
+	 * Creates a perma ID from a string
+	 * @param string $Perma String to create perma ID from
+	 * @return string
+	 */
+	private static function _createPerma ($Perma)
+	{
+		$Remove = array ("'", "\"", ".", ",", "~", "!", "?", "<", ">", "@", "#", "$", "%", "^", "&", "*", "(", ")", "+", "=", "/", "\\", "|", "{", "}", "[", "]", "-", "--");
+		for ($i = 0; $i < sizeof ($Remove); $i++)
+			$Perma = str_replace ($Remove[$i], "", $Perma);
+		$Perma = str_replace ("  ", " ", $Perma);
+		$Perma = str_replace (" ", "-", $Perma);
+		return strtolower ($Perma);
+	}	
+	
 }

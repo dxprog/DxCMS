@@ -238,3 +238,22 @@ div#galleryItem { height:625px; width:0; margin:0 auto; background:#fff; positio
 #error { width:600px; margin:0 auto; }
 #error img { float:left; padding:0 15px 0 0; }
 #error h2 { text-transform:uppercase; font:bold 36px 'Trebuchet MS', sans-serif; padding:60px 0 0; }
+
+/* Poll styles */
+#body article .graph { font:12px 'Trebuchet MS', sans-serif; width:540px; margin:0 0 20px; }
+#body article .graph ul { margin:0; padding:0; list-style:none; }
+#body article .graph li { padding:5px; position:relative; height:18px; }
+#body article .graph .data { display:none; position:absolute; top:30px; left:190px; z-index:100; background:#fff; padding:5px; border:1px solid #000; }
+#body article .graph span { width:175px; display:block; float:left; text-align:right; padding:0 10px 0 0; }
+#body article .graph .bar { padding:9px; background:#f26716; opacity:.5; border:1px solid #000; float:left; }
+#body article .graph li:hover { background:#eee; cursor:pointer; }
+#body article .graph li:hover .bar { opacity:1; }
+#body article .graph li:hover .data { display:block; }
+#body article .graph h4 { text-align:center; text-transform:uppercase; background:#ccc; margin:0; padding:5px; }
+
+/* Poll form */
+#body article .poll { margin:0 0 20px; }
+#body article .poll h4 { text-align:center; text-transform:uppercase; background:#ccc; margin:0; padding:5px; }
+#body article .poll ul { list-style:none; margin:0 auto; }
+#body article .poll li { margin:5px 0; font:14px Georgia, serif; padding:0 100px; }
+#body article .poll button { display:block; width:100px; height:30px; margin:0 auto; }

@@ -8,7 +8,7 @@
 		<link rel="alternate" type="application/rss+xml" title="dxprog's News Feed" href="http://feeds.feedburner.com/dxprog" />
 		<script type="text/javascript" src="/global/js/jquery-1.5.min.js"></script>
 		<script type="text/javascript" src="/global/js/jquery.swfobject.1-0-9.min.js"></script>
-		<script type="text/javascript" src="/global/js/dx.js?20110105"></script>
+		<script type="text/javascript" src="/global/js/dx.js?20110211"></script>
 		<!--[if IE]>
 		<script>
 			var e = ("abbr,article,aside,audio,canvas,datalist,details,figure,footer,header,hgroup,mark,menu,meter,nav,output,progress,section,time,video").split(',');

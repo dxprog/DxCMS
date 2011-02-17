@@ -56,8 +56,9 @@ foreach ($_GET as $var=>$val) {
 	}
 }
 
-// Parse the request
+// Parse the request and clean up
 $_ret = DxApi::handleRequest($library, $method, $vars);
+DxApi::clean();
 
 // Begin constructing the response
 _constructResponse ($type, $_ret);

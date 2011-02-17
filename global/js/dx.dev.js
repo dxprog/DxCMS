@@ -297,6 +297,41 @@ dx.gallery = function() {
 
 };
 
+dx.poll = function(id) {
+
+	var
+	poll = $('#poll' + id),
+	
+	voteCallback = function(data) {
+		
+		// Render out the poll results
+		if (typeof(data.body.items) !== 'undefined' && data.body.items.length > 0) {
+		
+			var out = '<div class="graph"><h4>' + data.body.title + '</h4><ul>', i, count;
+			for (i = 0, count = data.body.items.length; i < count; i++) {
+				var item = data.body.items[i];
+				var bar = item.votes > 0 ? '<div class="bar" style="width:' + (item.percent / 2) + '%;"></div>' : '';
+				out += '<li><span>' + item.title + '</span>' + bar + '<div class="data">' + item.percent + '% - ' + item.votes + ' votes</div></li>';				
+			}
+			out += '</ul></div>';
+			
+			poll.replaceWith(out);
+		
+		}
+		
+	},
+	
+	submitPoll = function(e) {
+		e.preventDefault();
+		var selectedOption = poll.find('input[name="poll_option"]:checked').val();
+		dx.call('poll', 'vote', {id:id, item:selectedOption}, voteCallback);
+	};
+	
+	// Hijack the submit event
+	poll.submit(submitPoll);
+
+};
+
 /* --- AUTO EXECUTING FUNCTIONS --- */
 
 /* Comment form submission stuffs (starts on DOM load) */
@@ -342,7 +377,7 @@ dx.gallery = function() {
 	
 }());
 
-/* Video embed wrapper */
+/* Video embed wrapper (jQuery extension) */
 (function($) {
 
 	$.fn.video = function(url) {
@@ -353,7 +388,7 @@ dx.gallery = function() {
 
 }(jQuery));
 
-/* YouTube embed */
+/* YouTube embed (jQuery extension) */
 (function($) {
 	$.fn.youtube = function(id) {
 		this.each(function() {

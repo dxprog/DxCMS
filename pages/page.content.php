@@ -241,10 +241,11 @@ function content_getPosts ()
 	
 	// Grab the fifteen latest posts
 	$obj = Dx::call('content', 'getContent', array('offset'=>($page - 1) * ENTRIES_PER_PAGE, 'tag'=>$tag, 'mindate'=>$minDate, 'maxdate'=>$maxDate, 'max'=>ENTRIES_PER_PAGE, 'parent'=>0, 'contentType'=>$type));
-	if (null != $obj && $obj->status->ret_code == 0 && is_array($obj->body->content)) {
+	if (null != $obj && $obj->status->ret_code == 0 && isset($obj->body->content)) {
 		
 		// Format each entry
 		$arr = array();
+		
 		foreach ($obj->body->content as $post) {
 			$arr[] = _formatPost ($post, true);
 		}
