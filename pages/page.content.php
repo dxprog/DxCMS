@@ -53,8 +53,8 @@ function content_getEntry ($error = "", $body = "")
 
 	global $_methods, $_baseURI, $_title;
 
-	$retVal = null;
-	$templateData = null;
+	$retVal = new stdClass();
+	$templateData = new stdClass();
 	
 	// Switch to the entry template
 	DxDisplay::setTemplate('content_entry');
@@ -118,7 +118,7 @@ function content_getRss() {
 function content_getUser()
 {
 
-	$retVal = null;
+	$retVal = new stdClass();
 	
 	if (isset($_COOKIE['authType']) && isset($_COOKIE['authUser'])) {
 		
@@ -158,8 +158,8 @@ function content_postComment ()
 	$user = content_getUser();
 	
 	// Store all the values we'll need coming in from the form
-	$sync = null;
-	$sync->meta = null;
+	$sync = new stdClass();
+	$sync->meta = new stdClass();
 	$sync->body = $_POST['comment'];
 	$sync->perma = $_GET['perma'];
 	$sync->meta->user_ip = $_SERVER['REMOTE_ADDR'];
@@ -201,7 +201,7 @@ function content_getPosts ()
 	
 	// Declarations
 	$title = 'Blog - '.$_title;
-	$retVal = null;
+	$retVal = new stdClass();
 	$minDate = null;
 	$maxDate = null;
 	$tag = '';
@@ -291,7 +291,7 @@ function content_getSearch() {
 		DxDisplay::setVariable('title', 'Search results - ' . $_title);
 		
 		// Do the search and start populating our outgoing object with related data
-		$obj = null;
+		$obj = new stdClass();
 		$page = intVal($_GET['p']);
 		$obj->query = $_GET['q'];
 		$obj->results = Dx::call('content', 'search', array('q'=>$_GET['q'], 'noTags'=>true, 'page'=>$page, 'max'=>SEARCH_RESULTS_PER_PAGE));
@@ -344,7 +344,7 @@ function content_getRelated($id) {
 function content_sidebarFeatured () {
 	
 	$retVal = '';
-	$t = null;
+	$t = new stdClass();
 	$t->featured = true;
 	$obj = Dx::call('content', 'getContent', array('meta'=>$t, 'select'=>'title,perma,meta', 'max'=>4));
 	$retVal = DxDisplay::compile($obj->body, 'content_featured');
@@ -357,7 +357,7 @@ function content_sidebarArchives ()
 
 	global $_baseURI;
 
-	$obj = null;
+	$obj = new stdClass();
 	
 	// First, check to see if an archive cache file exists and it's not too old
 	$cacheKey = "sidebar_archives";
@@ -367,10 +367,10 @@ function content_sidebarArchives ()
 		$t = Dx::call('content', 'getArchives');
 		
 		// Format the archives
-		$out = null;
+		$out = new stdClass();
 		$out->archives = array();
 		foreach ($t->body as $d) {
-			$t = null;
+			$t = new stdClass();
 			$t->url = $_baseURI.'/archives/'.date ("m/Y", $d->timestamp).'/';
 			$t->title = $d->text;
 			$out->archives[] = $t;
@@ -408,7 +408,7 @@ function content_sidebarTagCloud ()
 	
 	global $_baseURI;
 	
-	$obj = null;
+	$obj = new stdClass();
 	$retVal = '';
 	
 	// Check for a cached version before continuing

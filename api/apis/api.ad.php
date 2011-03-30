@@ -2,7 +2,7 @@
 
 class Ad {
 
-	function Get($vars)
+	public static function Get($vars)
 	{
 		
 		if (!$vars['size'] || !$vars['site']) {

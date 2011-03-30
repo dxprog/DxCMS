@@ -32,7 +32,6 @@ class DxCache {
 			$retVal = self::$_conn->get(md5($key));
 			$retVal = unserialize($retVal);
 		}
-		$retVal = false;
 		return $retVal;
 	}
 	

@@ -10,7 +10,7 @@ class DxDisplay {
 	/**
 	 * Renders the page
 	 **/
-	public function render()
+	public static function render()
 	{
 		if (!self::$rendered) {
 			$out = file_get_contents('./themes/'.self::$theme.'/'.self::$pageTemplate.'.tpl');
@@ -20,10 +20,11 @@ class DxDisplay {
 			echo $out;
 			self::$rendered = true;
 		}
+		
 	}
 	
 	// Displays an error message and halts rendering
-	public function showError($code, $message) {
+	public static function showError($code, $message) {
 		global $_title;
 		$content = self::compile('<error><code>' . $code . '</code><message>' . $message . '</message></error>', 'error');
 		self::setVariable('title', 'Error - ' . $_title);
@@ -32,19 +33,19 @@ class DxDisplay {
 		self::render();
 	}
 	
-	public function setTheme($name) {
+	public static function setTheme($name) {
 		self::$theme = $name;
 	}
 	
-	public function setTemplate($name) {
+	public static function setTemplate($name) {
 		self::$pageTemplate = $name;
 	}
 	
-	public function setVariable($name, $val) {
+	public static function setVariable($name, $val) {
 		self::$templateVars[strtoupper($name)] = $val;
 	}
 	
-	public function compile($data, $template, $cacheKey = null) {
+	public static function compile($data, $template, $cacheKey = null) {
 		
 		global $_baseURI, $_theme;
 		$retVal = '';

@@ -78,7 +78,9 @@ function db_Query ($query, $errSuppress = false)
 	if (!($result = @mysql_query ($query)) && !$errSuppress) {
 		raiseError (DBERR_BAD_QUERY, $_dberr[DBERR_BAD_QUERY].mysql_error ());
 	}
-		
+	
+	$out = new stdClass();
+	
 	// Determine the output based upon the command used
 	switch (strtolower (substr ($query, 0, 6))) {
 		case 'select':

@@ -8,7 +8,7 @@
  */
 
 require_once($_apiPath . '/config.php');
-require_once($_apiPath . '/libs/lib_mysql.php');
+require_once($_apiPath . '/libs/lib_mysqli.php');
 require_once($_apiPath . '/libs/dx_cache.php');
 require_once($_apiPath . '/apis/api.support.php');
  
@@ -78,9 +78,9 @@ class DxApi {
 		$genTime = microtime(true) - $_begin;
 
 		// Construct the headers and return
-		$obj = null;
-		$obj->metrics = null;
-		$obj->status = null;
+		$obj = new stdClass();
+		$obj->metrics = new stdClass();
+		$obj->status = new stdClass();
 		$obj->metrics->timestamp = gmdate('U');
 		$obj->metrics->gen_time = $genTime;
 		$obj->status->method = isset($_GET['method']) ? $_GET['method'] : 'none';

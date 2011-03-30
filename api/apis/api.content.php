@@ -65,7 +65,7 @@ class Content {
 	public static function getContent($vars) {
 
 		// Get the properties passed
-		$retVal = null;
+		$retVal = new stdClass();
 		$select = isset($vars['select']) ? strlen($vars['select']) > 0 ? $vars['select'] : 'c.*' : 'c.*';
 		$id = isset($vars['id']) ? $vars['id'] : null;
 		$perma = isset($vars['perma']) ? $vars['perma'] : null;
@@ -178,7 +178,7 @@ class Content {
 			$result = db_Query($query);
 			$retVal->content = array();
 			while ($row = db_Fetch($result)) {
-				$obj = null;
+				$obj = new stdClass();
 				$obj->id = isset($row->content_id) ? $row->content_id : null;
 				$obj->title = isset($row->content_title) ? $row->content_title : null;
 				$obj->perma = isset($row->content_perma) ? $row->content_perma : null;
@@ -248,7 +248,7 @@ class Content {
 		// Round up all the returned tags into an array for output
 		$result = db_Query($query);
 		while ($row = db_Fetch($result)) {
-			$t = null;
+			$t = new stdClass();
 			$t->name = $row->tag_name;
 			$t->count = isset($row->tag_count) ? $row->tag_count : 0;
 			$retVal[] = $t;
@@ -269,7 +269,7 @@ class Content {
 		// Get a date for every month/year there was a post
 		$result = db_Query("SELECT MONTH(FROM_UNIXTIME(content_date)) AS month, YEAR(FROM_UNIXTIME(content_date)) AS year FROM content GROUP BY year, month ORDER BY year DESC, month DESC");
 		while ($row = db_Fetch($result)) {
-			$t = null;
+			$t = new stdClass();
 			$t->timestamp = mktime(0, 0, 0, $row->month, 1, $row->year) + 3600;
 			$t->text = date("F Y", $t->timestamp);
 			$retVal[] = $t;
@@ -304,7 +304,7 @@ class Content {
 		if (is_numeric($vars['id'])) {
 			
 			// Set up an object with all the info and stuff it into the cached array
-			$obj = null;
+			$obj = new stdClass();
 			$obj->ip = $_SERVER['REMOTE_ADDR'];
 			$obj->id = intVal($vars['id']);
 			$obj->time = time();
@@ -322,7 +322,7 @@ class Content {
 				db_Query($query);
 				
 				// Null out the array so we can start over
-				$hits = null;
+				$hits = new stdClass();
 				DxCache::Set('ContentHits_Date', time());
 				
 			}
@@ -362,7 +362,7 @@ class Content {
 		db_Connect();
 		$result = db_Query('SELECT count(DISTINCT h.hit_ip) AS total, c.content_id, c.content_title, c.content_perma FROM hits h INNER JOIN content c ON c.content_id=h.content_id WHERE h.hit_date >= ' . $vars['mindate'] . ' GROUP BY h.content_id ORDER BY total DESC, c.content_date DESC LIMIT ' . $vars['max']);
 		while ($row = db_Fetch($result)) {
-			$t = null;
+			$t = new stdClass();
 			$t->count = $row->total;
 			$t->id = $row->content_id;
 			$t->title = $row->content_title;
@@ -390,7 +390,7 @@ class Content {
 			
 			$result = db_Query('SELECT COUNT(*) AS total, c.content_id, c.content_title, c.content_perma FROM tags t INNER JOIN content c ON c.content_id=t.content_id WHERE t.tag_name IN (SELECT tag_name FROM tags WHERE content_id=' . $vars['id'] . ') AND c.content_parent=0 AND t.content_id != ' . $vars['id'] . ' GROUP BY content_id ORDER BY total DESC, c.content_date DESC LIMIT 5');
 			while ($row = db_Fetch($result)) {
-				$obj = null;
+				$obj = new stdClass();
 				$obj->title = $row->content_title;
 				$obj->perma = $row->content_perma;
 				$retVal[] = $obj;
@@ -428,7 +428,7 @@ class Content {
 			self::_syncTags($obj);
 		}
 	
-		$retVal = null;
+		$retVal = new stdClass();
 		if ($id !== null) {
 			$retVal = self::getContent(array('id'=>$id));
 		}
@@ -452,7 +452,7 @@ class Content {
 		$max = isset($vars['max']) && is_numeric($vars['max']) ? $vars['max'] : 15;
 		$query = isset($vars['q']) && strlen($vars['q']) > 0 ? explode(' ', preg_replace($stop, '', $vars['q'])) : false;
 		$noTags = isset($vars['noTags']) && $vars['noTags'] === true;
-		$retVal = null;
+		$retVal = new stdClass();
 		
 		// If there's a query, do the search
 		if (count($query) > 0) {
@@ -491,7 +491,7 @@ class Content {
 			$result = db_Query($query);
 			$retVal->results = array();
 			while ($row = db_Fetch($result)) {
-				$obj = null;
+				$obj = new stdClass();
 				$obj->id = $row->content_id;
 				$obj->title = $row->content_title;
 				$obj->perma = $row->content_perma;
@@ -511,7 +511,7 @@ class Content {
 	}
 	
 	public static function postComment($vars, $obj) {
-		$retVal = null;
+		$retVal = new stdClass();
 		if ($vars['perma']) {
 			$id = self::_getIdFromPerma($vars['perma']);
 			if ($id) {
