@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:php="http://php.net/xsl">
 
 	<xsl:template match="/">
 		<aside id="tagCloud">
@@ -14,7 +14,7 @@
 					</xsl:variable>
 					<a>
 						<xsl:attribute name="style">font-size:<xsl:value-of select="$size" />%;</xsl:attribute>
-						<xsl:attribute name="href"><xsl:value-of select="concat('/tag/', name)" /></xsl:attribute>
+						<xsl:attribute name="href"><xsl:value-of select="concat('/tag/', php:function('urlencode', string(name)), '/')" /></xsl:attribute>
 						<xsl:value-of select="name" />
 					</a>
 					<xsl:if test="position() &lt; 25">, </xsl:if>

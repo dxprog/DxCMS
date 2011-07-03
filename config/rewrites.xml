@@ -179,6 +179,15 @@
 		<query_string>page=comic&amp;perma=$1</query_string>
 	</rule>
 	
+	<rule redirect="true">
+		<expr>^(qa|about)$</expr>
+		<query_string>/qa/</query_string>
+	</rule>
+	<rule>
+		<expr>^(qa|about)/</expr>
+		<query_string>page=qa</query_string>
+	</rule>
+	
 	<!-- ADMIN -->
 	<rule redirect="true">
 		<expr>^admin$</expr>

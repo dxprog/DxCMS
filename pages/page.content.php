@@ -60,7 +60,7 @@ function content_getEntry ($error = "", $body = "")
 	DxDisplay::setTemplate('content_entry');
 	
 	// Get the post and log a page view
-	$entry = Dx::call('content', 'getContent', array('perma'=>$_GET['perma']), 0);
+	$entry = Dx::call('content', 'getContent', array('perma'=>$_GET['perma']));
 	if (null != $entry->body && isset($entry->body->content) && $entry->status->ret_code == 0) {
 		$post = $entry->body->content[0];
 		Dx::call('content', 'logContentView', array('id'=>$post->id), 0);
@@ -91,7 +91,7 @@ function content_getEntry ($error = "", $body = "")
 		$templateData->user = content_getUser();
 
 		// Run the post and comments through the template
-		$retVal = html_entity_decode(DxDisplay::compile($templateData, "content_article"));
+		$retVal = DxDisplay::compile($templateData, "content_article");
 		DxDisplay::setVariable('content', $retVal);
 		content_getRelated($post->id);
 	} else {
@@ -216,8 +216,8 @@ function content_getPosts ()
 	
 	// Figure up tags
 	if (isset($_GET['tag']) && $_GET['tag']) {
-		$title = "Blog - Posts tagged with '$_GET[tag]' - $_title";
-		$tag = $_GET['tag'];
+		$tag = urldecode($_GET['tag']);
+		$title = 'Blog - Posts tagged with ' . $tag . ' - ' . $_title;
 	}
 	
 	// Check the dates
@@ -269,7 +269,7 @@ function content_getPosts ()
 			$cacheKey = 'BlogHome_' . $page . '_' . $minDate . '_' . $maxDate . '_' . $tag . '_' . $type;
 		}
 		$t->articles = $arr;
-		$retVal = html_entity_decode(DxDisplay::compile($t, 'content_articles', $cacheKey, 0));
+		$retVal = DxDisplay::compile($t, 'content_articles', $cacheKey);
 	
 	} else {
 		DxDisplay::showError($obj->status->ret_code, 'There was an error siplaying that page!');

@@ -9,15 +9,13 @@ function _formatPost ($post, $convBreak = false)
 	if (is_object($post)) {
 		$cacheKey = 'formatted_content_'.$post->id;
 		$cacheResult = DxCache::Get($cacheKey);
-		$cacheResult = false;
 		if ($cacheResult === false) {
 			
 			// Break new lines in the body up into paragraphs and then run it through any post formatting extensions
 			$disableFormatting = isset($post->meta->formatting) ? $post->meta->formatting : false;
 			if (!$disableFormatting) {
-				$body = htmlentities(htmlentities($post->body));
-				$body = implode ('</p><p>', explode (chr(13), $body));
-				$body = '<p>'.str_replace(array(chr(10), chr(13)), '', $body).'</p>';
+				$body = htmlentities($post->body);
+				$body = '<p>' . str_replace(array("\r\n", "\r", "\n"), '</p><p>', $body) . '</p>';
 				$body = str_replace ('<p></p>', '', $body);
 				$body = preg_replace ("@\<p\>(\<div(.*?)\>(.*?)\</div\>)\</p\>@is", '$1', $body);
 				$post->body = $body;
@@ -48,14 +46,7 @@ function _formatPost ($post, $convBreak = false)
 		} else {
 			$post->body = str_replace ("[break]", "<a name=\"break\"> </a>", $post->body);
 		}
-		
-		// Run some checks to make sure our paragraphs are properly closed
-		$lastOpenPara = strrpos($post->body, '<p>');
-		$lastClosePara = strrpos($post->body, '</p>');
-		
-		if ($lastOpenPara !== false && ($lastClosePara === false || $lastClosePara < $lastOpenPara)) {
-			$post->body .= '</p>';
-		}
+
 	}
 	
 	return $post;
@@ -66,7 +57,7 @@ function _formatComment ($comment)
 {
 
 	$body = $comment->body;
-	$body = htmlentities(htmlentities($body));
+	$body = htmlentities($body);
 	$body = preg_replace('@http://([.\S]+)@is', '<a href="http://$1" target="_blank">http://$1</a>', $body);
 	$body = implode ('</p><p>', explode (chr(13), $body));
 	$body = '<p>'.str_replace(array(chr(10), chr(13)), '', $body).'</p>';
@@ -88,6 +79,7 @@ function ext_formatPostMarkup ($post)
 					"@\[url=http:\/\/(.*?)\](.*?)\[/url\]@",
 					"@\|js=(.*?)=sj\|(.*?)\|@",
 					"@\<p\>\[head\](.*?)\[/head\]\</p\>@",
+					"@\<p\>\[header\](.*?)\[/header\]\</p\>@",
 					"@\[list\](.*?)\[/list\]@",
 					"@\[item\](.*?)\[/item\]@",
 					"@\[youtube=(.*?)\]@",
@@ -100,6 +92,7 @@ function ext_formatPostMarkup ($post)
 					"<img src=\"http://\$1\" alt=\"\$2\" title=\"\$2\" />",
 					"<a href=\"http://\$1\">\$2</a>",
 					"<a href=\"javascript:\$1\">\$2</a>",
+					"<h4>\$1</h4>",
 					"<h4>\$1</h4>",
 					"<ul>\$1</ul>",
 					"<li>\$1</li>",

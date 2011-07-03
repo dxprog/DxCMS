@@ -403,6 +403,23 @@ class Content {
 		
 	}
 	
+	/**
+	 * Returns a list of tags by their popularity
+	 */
+	public static function getTagsByPopularity($vars) {
+		$retVal = array();
+		db_Connect();
+		$result = db_Query('SELECT tag_name, COUNT(h.content_id) AS total FROM hits h INNER JOIN tags t ON t.content_id = h.content_id GROUP BY t.tag_name ORDER BY total DESC LIMIT 25');
+		$retVal = array();
+		while ($row = db_Fetch($result)) {
+			$retVal[] = $row;
+		}
+		return $retVal;
+	}
+	
+	/**
+	 * Inserts or updates a piece of content in the database
+	 */
 	public static function syncContent($vars, $obj) {
 	
 		$id = is_numeric($obj->id) ? intVal($obj->id) : null;
@@ -527,6 +544,9 @@ class Content {
 		return $retVal;
 	}
 	
+	/**
+	 * Gets the content ID of an object based upon the incoming perma
+	 */
 	private static function _getIdFromPerma($perma) {
 		
 		db_Connect();
@@ -535,6 +555,9 @@ class Content {
 		
 	}
 	
+	/**
+	 * Updates the tags associated to a piece of content
+	 */
 	private static function _syncTags($obj) {
 		
 		if (is_numeric($obj->id) && count($obj->tags) > 0) {

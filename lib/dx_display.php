@@ -20,7 +20,6 @@ class DxDisplay {
 			echo $out;
 			self::$rendered = true;
 		}
-		
 	}
 	
 	// Displays an error message and halts rendering
@@ -45,7 +44,7 @@ class DxDisplay {
 		self::$templateVars[strtoupper($name)] = $val;
 	}
 	
-	public static function compile($data, $template, $cacheKey = null) {
+	public static function compile($data, $template, $cacheKey = false) {
 		
 		global $_baseURI, $_theme;
 		$retVal = '';
@@ -57,7 +56,8 @@ class DxDisplay {
 			$parseXml = false;
 			
 			// Check to see if this transform is cached
-			if (null == $cacheKey || ($retVal = DxCache::Get($cacheKey)) === false) {
+			$retVal = $cacheKey ? DxCache::Get($cacheKey) : false;
+			if (false === $retVal) {
 			
 				// If the incoming data is an object, serialize it before continuing
 				if (!is_string($data)) {

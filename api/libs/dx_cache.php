@@ -2,10 +2,6 @@
 
 DxCache::Connect();
 
-if (isset($_GET['flushCache'])) {
-	DxCache::flush();
-}
-
 // memcache class
 class DxCache {
 
@@ -31,6 +27,9 @@ class DxCache {
 		if (null != self::$_conn && $key) {
 			$retVal = self::$_conn->get(md5($key));
 			$retVal = unserialize($retVal);
+		}
+		if (isset($_GET['flushCache'])) {
+			$retVal = false;
 		}
 		return $retVal;
 	}

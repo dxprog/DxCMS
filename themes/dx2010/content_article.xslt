@@ -153,7 +153,7 @@
 	</xsl:template>
 	
 	<xsl:template match="user">
-		<script type="text/javascript" src="/global/js/md5.js">//</script>
+		<script type="text/javascript" src="/global/js/md5.js"></script>
 		<div id="addComment">
 			<h3>Post A Comment</h3>
 			<form action="/post_comment/{//post/perma}/" method="post" id="commentForm">

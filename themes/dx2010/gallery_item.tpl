@@ -5,7 +5,7 @@
 		<link rel="stylesheet" type="text/css" href="/global/css/code_styles.css" />
 		<link rel="stylesheet" type="text/css" href="/global/css/gallery_styles.css" />
 		<link rel="stylesheet" type="text/css" href="/global/css/jquery.lightbox-0.5.css" />
-		<link rel="stylesheet" type="text/css" href="/themes/dx2010/styles.css?20110211" />
+		<link rel="stylesheet" type="text/css" href="/themes/dx2010/styles.css?{CSS_DATE}" />
 		<style type="text/css">
 			body { width:750px; }
 			#content, #body { width:750px !important; }
@@ -14,7 +14,7 @@
 		<script type="text/javascript" src="/global/js/jquery-1.5.min.js"></script>
 		<script type="text/javascript" src="/global/js/jquery.lightbox-0.5.min.js"></script>
 		<script type="text/javascript" src="/global/js/jquery.swfobject.1-0-9.min.js"></script>
-		<script type="text/javascript" src="/global/js/dx.js?20110211"></script>
+		<script type="text/javascript" src="/global/js/dx.js?{JS_DATE}"></script>
 		<!--[if IE]>
 		<script>
 			var e = ("abbr,article,aside,audio,canvas,datalist,details,figure,footer,header,hgroup,mark,menu,meter,nav,output,progress,section,time,video").split(',');
@@ -25,16 +25,18 @@
 		<title>{TITLE}</title>
 	</head>
 	<body>
-		<section id="content">
-			<section id="body" class="full">
-				{CONTENT}
+		<div id="wrapper">
+			<section id="content">
+				<section id="body" class="full">
+					{CONTENT}
+				</section>
+				<script type="text/javascript">
+					(function() {
+						$('#content a').attr('target', '_blank');
+					})();
+				</script>
 			</section>
-			<script type="text/javascript">
-				(function() {
-					$('#content a').attr('target', '_blank');
-				})();
-			</script>
-		</section>
+		</div>
 		{GA}
 	</body>
 </html>

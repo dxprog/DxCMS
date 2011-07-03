@@ -35,31 +35,42 @@ require_once('./libs/dx_serialize.php');
 $type = strtolower($_GET['type']);
 $method = $_GET['method'];
 
-// Check to see if a valid return type was supplied
-if (@strpos($_return, $type) === false) {
-	raiseError(ERR_INVALID_RETURN_TYPE, $_err[ERR_INVALID_RETURN_TYPE]);
+// Check for a cache of this call
+$cacheKey = 'ApiCall';
+foreach ($_GET as $key=>$val) {
+	$cacheKey .= '_' . $key . '=' . $val;
 }
+$_ret = DxCache::Get($cacheKey);
+if (false === $_ret) {
 
-// Get the library and function call of the incoming request. The result should have exactly two rows
-$t = explode ('.', $method, 2);
-if (count($t) != 2) {
-	raiseError (ERR_INVALID_METHOD, $_err[ERR_INVALID_METHOD]);
-}
-$library = $t[0];
-$method = $t[1];
-
-// Place all the items in the query string into an array for passing to the method
-$vars = array();
-foreach ($_GET as $var=>$val) {
-	if ($var != 'method' && $var != 'type') {
-		$vars[$var] = $val;
+	// Check to see if a valid return type was supplied
+	if (@strpos($_return, $type) === false) {
+		raiseError(ERR_INVALID_RETURN_TYPE, $_err[ERR_INVALID_RETURN_TYPE]);
 	}
+
+	// Get the library and function call of the incoming request. The result should have exactly two rows
+	$t = explode ('.', $method, 2);
+	if (count($t) != 2) {
+		raiseError (ERR_INVALID_METHOD, $_err[ERR_INVALID_METHOD]);
+	}
+	$library = $t[0];
+	$method = $t[1];
+
+	// Place all the items in the query string into an array for passing to the method
+	$vars = array();
+	foreach ($_GET as $var=>$val) {
+		if ($var != 'method' && $var != 'type') {
+			$vars[$var] = $val;
+		}
+	}
+
+	// Parse the request and clean up
+	$_ret = DxApi::handleRequest($library, $method, $vars);
+	DxApi::clean();
+	DxCache::Set($cacheKey, $_ret);
+
 }
-
-// Parse the request and clean up
-$_ret = DxApi::handleRequest($library, $method, $vars);
-DxApi::clean();
-
+	
 // Begin constructing the response
 _constructResponse ($type, $_ret);
 

@@ -13,23 +13,28 @@ function ext_formatPostCode ($post)
 	if (preg_match_all ("@\[code=(.*?)\](.*?)\[/code\]@is", $post->body, $matches)) {
 		for ($i = 0; $i < sizeof ($matches[0]); $i++) {
 			
+			// Add the PHP tags in if that is the set language as well as additional keyword highlighting
+			$code = $matches[2][$i];
+			$lang = strtolower ($matches[1][$i]);
+			if ($lang == 'php') {
+				$code = "<?php\n$code\n?>";
+			}
+			
 			// Remove all paragraph tags from the code bits
-			$code = str_replace (array ("<p>", "</p>", "\n\n"), "\n", $matches[2][$i]);
+			$code = str_replace (array ("<p>", "</p>", "\n\n"), "\n", $code);
 			
 			// Do syntax highlighting
-			$lang = strtolower ($matches[1][$i]);
 			$code = _highlightSyntax ($code, $lang);
 			
-			// Add the PHP tags in if that is the set language as well as additional keyword highlighting
-			if ($lang == "php")
-				$code = "&lt;?php\n$code\n?&gt;";
-			
 			// Break each new line up and stuff it into a list with line numbers
-			if ($code{0} == "\n")
+			if ($code{0} == "\n") {
 				$code = substr ($code, 1);
-			$t = explode ("\n", $code); $n = "";
-			for ($j = 0; $j < sizeof ($t); $j++)
-				$n .= "<li>".$t[$j]."</li>";
+			}
+			$t = explode ("\n", $code);
+			$n = '';
+			for ($j = 0; $j < sizeof ($t); $j++) {
+				$n .= '<li>' . $t[$j] . '</li>';
+			}
 			$post->body = str_replace ($matches[0][$i], "<div class=\"code\"><span>Code: $lang</span><ol>$n</ol></div>", $post->body);
 			
 		}

@@ -169,7 +169,7 @@ dx.archives = function() {
 			year++;
 		}
 		maxDate = (month + 1) + '/1/' + year;
-		dx.call('content', 'getContent', {'noCount':'true', 'noTags':'true', 'maxdate':maxDate, 'mindate':minDate, 'select':'title,perma,date', 'contentType':'art,video,blog,portfolio'}, displayPosts);
+		dx.call('content', 'getContent', {'max':0, 'noCount':'true', 'noTags':'true', 'maxdate':maxDate, 'mindate':minDate, 'select':'title,perma,date', 'contentType':'art,video,blog,portfolio'}, displayPosts);
 	},
 	
 	controlClick = function(e) {
