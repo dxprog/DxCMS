@@ -1,13 +1,477 @@
-var dx={call:function(a,b,c,d){var a="/api/?type=json&method="+a+"."+b,e;for(e in c)c.hasOwnProperty(e)&&(a+="&"+e+"="+c[e]);$.ajax({url:a,dataType:"jsonp",success:d})},flash:function(a){var b=a.height/a.width,c=$(".gallerySingle").width();if(a.width>c)a.width=c,a.height=Math.round(c*b);$(".gallerySingle").flash(a)},featured:function(){var a=0,b=null,c=null,d=1E3/41,e=function(){var b=(new Date).getTime()-c,d=960-(a*240+Math.floor(240*(b/8E3)));$("#featured").css("background-position","-"+d+"px 100%");
-b>8E3&&(a++,a>=4?($("#featured li:not(:first)").hide(),$("#featured li:last").show().fadeOut(),a=0):$("#featured li:eq("+a+")").fadeIn(),c=(new Date).getTime())};(function(){$("#featured").find("li:not(:first)").hide();c=(new Date).getTime();b=setInterval(e,d);$("#featured a").mouseover(function(){clearInterval(b);c=(new Date).getTime();e()}).mouseout(function(){b=setInterval(e,d);c=(new Date).getTime()})})()},archives:function(){var a=new Date,b=a.getMonth(),c=a.getFullYear(),d=[31,28,31,30,31,30,
-31,31,30,31,30,31],e=["January","February","March","April","May","June","July","August","September","October","November","December"],g=function(a){var i,l,f=b+1+"/1/"+c;if(f=Date.parse(f)){f=new Date(f);f.setDate(1);var g=f.getMonth();i=e[g];l=f.getFullYear();for(var g=g===1?l%4===0?29:28:d[g],h=f.getDay(),j="<table><tbody><tr>",m=0,n=f.getDay(),f=0;f<n;f++)j+='<td class="noDate">&nbsp;</td>';for(f=0;f<g;f++)m=f+h,m%7===0&&(j+="</tr>"),j+='<td class="day'+(f+1)+'">'+(f+1)+"</td>";for(m++;m%7!==0;)j+=
-'<td class="noDate">&nbsp;</td>',m++;j+="</tr></tbody></table>";$("#archives div").html(j);$("#archives h3").html(i+" "+l)}if(a.body.content.length>0){i=0;for(l=a.body.content.length;i<l;i++)g=(new Date(a.body.content[i].date*1E3)).getDate(),$("td.day"+g).addClass("hasPosts")}},h=function(){var a=b+1,d=c,e="",e="";a>12&&(a=1,d++);e=a+"/1/"+d;a+1>12&&(a=0,d++);dx.call("content","getContent",{max:0,noCount:"true",noTags:"true",maxdate:a+1+"/1/"+d,mindate:e,select:"title,perma,date",contentType:"art,video,blog,portfolio"},
-g)};$("#archives .control").click(function(a){switch($(a.target).attr("rel")){case "prev":b--;break;case "next":b++}b<0&&(b=11,c--);b>11&&(b=0,c++);h()});h();$("#archives").delegate(".hasPosts","click",function(){var a=(b+1).toString();window.location.href="/archives/"+(a.length<2?"0"+a:a)+"/"+c+"/"})},comments:function(){var a=0,b=0,c=function(a){if(a=$(a.target).attr("rel")){var b=a*30,c=b+30-1;$(".comment").show();$(".comment:gt("+c+")").hide();$(".comment:lt("+b+")").hide();$(".commentPages .selected").removeClass("selected");
-$('.commentPages [rel="'+a+'"]').addClass("selected")}};$(".commentReply").click(function(a){a=$(a.target).parent().find(".user").text();$("#commentBody").val("@"+a).focus()});(function(){a=$(".commentReply").length;if(a>30){b=Math.ceil(a/30);$(".comment:gt(29)").hide();var d='<ul class="commentPages">',e;for(e=0;e<b;e++)d+='<li><a href="#comments" class="commentPage'+(e===0?" selected":"")+'" rel="'+e+'">'+(e+1)+"</a></li>";d+="</ul>";$("#comments").append(d);$(d).insertAfter("#comments h3");$(".commentPage").click(c)}})()},
-gallery:function(){var a=function(a){a.preventDefault();var b=$(a.target).attr("href");b||(b=$(a.target).parents("a:first").attr("href"));b=b.match(/entry\/(.*?)\//)[1];$("#galleryBg").fadeIn(400,function(){var a=b;$("#galleryItem").prepend('<iframe src="/gallery/'+a+'/" id="galleryItem" frameborder="0"></iframe>')});$("#galleryItem").show().animate({width:"800px"})},b=function(){$("#galleryBg").fadeOut();$("#galleryItem").animate({width:0}).fadeOut();$("#galleryItem iframe").remove()};$(function(){$("#gallery a").click(a);
-$("#galleryBg").detach().appendTo("body").click(b);$("#galleryItem").css("margin-top",($(window).height()-$("#galleryItem").height())/2+"px");$("#galleryItem .close").click(b)})},poll:function(a){var b=$("#poll"+a),c=function(a){if(typeof a.body.items!=="undefined"&&a.body.items.length>0){var c='<div class="graph"><h4>'+a.body.title+"</h4><ul>",g,h;g=0;for(h=a.body.items.length;g<h;g++){var k=a.body.items[g];c+="<li><span>"+k.title+"</span>"+(k.votes>0?'<div class="bar" style="width:'+k.percent/2+
-'%;"></div>':"")+'<div class="data">'+k.percent+"% - "+k.votes+" votes</div></li>"}c+="</ul></div>";b.replaceWith(c)}};b.submit(function(d){d.preventDefault();d=b.find('input[name="poll_option"]:checked').val();dx.call("poll","vote",{id:a,item:d},c)})}};
-(function(){var a=function(){var a=!1;$("label.error").removeClass("error");$("#commentName").length&&!$("#commentName").val()&&(a=!0,$('label[for="commentName"]').addClass("error"));if($("#commentEmail").length&&!$("#commentEmail").val())a=!0,$('label[for="commentEmail"]').addClass("error");else if($("#commentEmail").length){var c=$("#commentEmail").val();c.match(/([\w\d]+)@([\w\d]+)\.([\w])/)?$("#botProof").val(hex_md5(c)):a=!0}$("#commentBody").val()||(a=!0,$('label[for="commentBody"]').addClass("error"));
-return!a};$(function(){$("#commentForm").submit(a)})})();(function(a){a.fn.video=function(b){this.each(function(){a(this).append('<embed width="610" height="350" src="/global/flash/jcplayer.swf" quality="high" pluginspage="http://www.macromedia.com/go/getflashplayer" align="middle" play="true" loop="true" scale="noScale" wmode="window" devicefont="false" bgcolor="#ffffff" name="jcplayer" menu="true" allowfullscreen="true" salign="TL" allowscriptaccess="sameDomain" flashvars="videoURL='+b+'&amp;autoHide=true&amp;margins=10&amp;offsetY=35&amp;highlightColor=0xf26716" type="application/x-shockwave-flash" />')})}})(jQuery);
-(function(a){a.fn.youtube=function(b){this.each(function(){a(this).append('<embed width="540" height="304" src="http://www.youtube.com/v/'+b+"?enablejsapi=1&playerapiid="+a(this).attr("id")+'" quality="high" pluginspage="http://www.macromedia.com/go/getflashplayer" align="middle" wmode="window" llowscriptaccess="sameDomain" type="application/x-shockwave-flash" />')})}})(jQuery);
-(function(a){var b=function(b){var d=a('#search input[type="text"]').val();if(d.length>0)window.location="/search/"+d+"/";b.preventDefault()};a(function(){a("#search form").submit(b)})})(jQuery);$(function(){$(".gallery a").length>0&&$(".gallery a").lightBox()});
+/* DxApi Lib */
+var dx = {};
+
+// Does a jsonp request to the API
+dx.call = function(library, method, params, callback) {
+
+	var qs = '/api/?type=json&method=' + library + '.' + method, i;
+	for (i in params) {
+		if (params.hasOwnProperty(i)) {
+			qs += '&' + i + '=' + params[i];
+		}
+	}
+	$.ajax({
+		url:qs,
+		dataType:'jsonp',
+		success:callback
+	});
+
+};
+
+// Inserts a flash file into the left column with proper aspect and size
+dx.flash = function(options) {
+
+	var
+	ratio = options.height / options.width,
+	maxWidth = $('.gallerySingle').width();
+	if (options.width > maxWidth) {
+		options.width = maxWidth;
+		options.height = Math.round(maxWidth * ratio);
+	}
+
+	$('.gallerySingle').flash(options);
+
+};
+
+/* Featured item rotator */
+dx.featured = function () {
+	var
+	currentItem = 0,
+	maxItems = 4,
+	rotatorPause = 8,
+	timerHandle = null,
+	timerStart = null,
+	fps = 1000 / 41,
+	changeImage = function() {
+		currentItem++;
+		if (currentItem >= maxItems) {
+			$('#featured li:not(:first)').hide();
+			$('#featured li:last').show().fadeOut();
+			currentItem = 0;
+		} else {
+			$('#featured li:eq(' + currentItem + ')').fadeIn();
+		}
+		timerStart = (new Date()).getTime();
+	},
+	doProgress = function() {
+		var timeDelta = (new Date()).getTime() - timerStart;
+		var offsetX = 960 - ((currentItem * 240) + Math.floor(240 * (timeDelta / (rotatorPause * 1000))));
+		$('#featured').css('background-position', '-' + offsetX + 'px 100%');
+		if (timeDelta > rotatorPause * 1000) {
+			changeImage();
+		}
+	},
+	init = function() {
+		$('#featured').find('li:not(:first)').hide();
+		timerStart = (new Date()).getTime();
+		timerHandle = setInterval(doProgress, fps);
+		$('#featured a')
+			.mouseover(function() { clearInterval(timerHandle); timerStart = (new Date()).getTime(); doProgress(); })
+			.mouseout(function() { timerHandle = setInterval(doProgress, fps); timerStart = (new Date()).getTime(); });
+	};
+	
+	init();
+	
+};
+
+/* Archive calendar */
+dx.archives = function() {
+
+	var
+	currentDate = new Date(),
+	currentMonth = currentDate.getMonth(),
+	currentYear = currentDate.getFullYear(),
+	months = [31,28,31,30,31,30,31,31,30,31,30,31],
+	monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+	dateClick = function(e) {
+		var
+		month = (currentMonth + 1).toString(),
+		url = '/archives/' + (month.length < 2 ? '0' + month : month) + '/' + currentYear + '/';
+		window.location.href = url;
+	},
+	buildCalendar = function(date) {
+		
+		date = Date.parse(date);
+		if (date) {
+			
+			date = new Date(date);
+			date.setDate(1);
+			
+			var
+			month = date.getMonth(),
+			monthName = monthNames[month],
+			year = date.getFullYear(),
+			monthLength = month === 1 ? year % 4 === 0 ? 29 : 28 : months[month],
+			dayOfWeek = date.getDay(),
+			out = '<table><tbody><tr>',
+			day = 0,
+			i, max = date.getDay();
+			
+			for (i = 0; i < max; i++) {
+				out += '<td class="noDate">&nbsp;</td>';
+			}
+			
+			for (i = 0; i < monthLength; i++) {
+				day = i + dayOfWeek;
+				if (day % 7 === 0) {
+					out += '</tr>';
+				}
+
+				out += '<td class="day' + (i + 1) + '">' + (i + 1) + '</td>';
+			}
+			
+			day++;
+			while (day % 7 !== 0) {
+				out += '<td class="noDate">&nbsp;</td>';
+				day++;
+			}
+			
+			out += '</tr></tbody></table>';
+			$('#archives div').html(out);
+			$('#archives h3').html(monthName + ' ' + year);
+			
+		}
+		
+	},
+	displayPosts = function(data) {
+		
+		var minDate = (currentMonth + 1) + '/1/' + currentYear, i, count;
+		buildCalendar(minDate);
+		if (data.body.count > 0) {
+			
+			for (i = 0, count = data.body.content.length; i < count; i++) {
+				
+				var
+				item = data.body.content[i],
+				date = new Date(item.date * 1000).getDate();
+				$('td.day' + date).addClass('hasPosts');
+				
+			}
+			
+		}
+		
+	},
+	
+	updateCalendar = function() {
+		var
+		month = currentMonth + 1,
+		year = currentYear,
+		maxDate = '',
+		minDate = '';
+		if (month > 12) {
+			month = 1;
+			year++;
+		}
+		minDate = month + '/1/' + year;
+		if (month + 1 > 12) {
+			month = 0;
+			year++;
+		}
+		maxDate = (month + 1) + '/1/' + year;
+		dx.call('content', 'getContent', {'max':0, 'noCount':'true', 'noTags':'true', 'maxdate':maxDate, 'mindate':minDate, 'select':'title,perma,date', 'contentType':'art,video,blog,portfolio'}, displayPosts);
+	},
+	
+	controlClick = function(e) {
+		var rel = $(e.target).attr('rel');
+		switch (rel) {
+			case 'prev':
+				currentMonth--;
+				break;
+			case 'next':
+				currentMonth++;
+				break;
+		}
+		
+		if (currentMonth < 0) {
+			currentMonth = 11;
+			currentYear--;
+		}
+		
+		if (currentMonth > 11) {
+			currentMonth = 0;
+			currentYear++;
+		}
+		
+		updateCalendar();
+		
+	},
+	
+	init = function() {
+		$('#archives .control').click(controlClick);
+		updateCalendar();
+		$('#archives').delegate('.hasPosts', 'click', dateClick);
+	};
+	
+	init();
+
+};
+
+/* Comments reply and pagination */
+dx.comments = function() {
+	
+	var
+	
+	// Properties
+	numComments = 0,
+	commentsPerPage = 30,
+	pages = 0,
+	currentPage = 0,
+	
+	// Event callbacks
+	replyClick = function(e) {
+		var
+		$parent = $(e.target).parent(),
+		id = $parent.attr('data-id'),
+		user = $parent.find('.user').text();
+		$('#comment_parent').val(id);
+		$('#commentBody').focus();
+	},
+	pageClick = function(e) {
+		var page = $(e.target).attr('rel');
+		if (page) {
+			var start = page * commentsPerPage, end = start + commentsPerPage - 1;
+			$('.comment').show();
+			$('.comment:gt(' + end + ')').hide();
+			$('.comment:lt(' + start + ')').hide();
+			$('.commentPages .selected').removeClass('selected');
+			$('.commentPages [rel="' + page + '"]').addClass('selected');
+			currentPage = page;
+		}
+	},
+	
+	// Workers
+	paginate = function() {
+		numComments = $('.commentReply').length;
+		if (numComments > commentsPerPage) {
+			pages = Math.ceil(numComments / commentsPerPage);
+			$('.comment:gt(' + (commentsPerPage - 1) + ')').hide();
+			var pagination = '<ul class="commentPages">', i;
+			for (i = 0; i < pages; i++) {
+				var selected = i === 0 ? ' selected' : '';
+				pagination += '<li><a href="#comments" class="commentPage' + selected + '" rel="' + i + '">' + (i + 1) + '</a></li>';
+			}
+			pagination += '</ul>';
+			$('#comments').append(pagination);
+			$(pagination).insertAfter('#comments h3');
+			$('.commentPage').click(pageClick);
+		}
+	},
+	init = function() {
+		$('.commentReply').click(replyClick);
+		paginate();
+	};
+	
+	init();
+	
+};
+
+dx.gallery = function() {
+
+	var
+	loadItem = function(href) {
+		$('#galleryItem').prepend('<iframe src="/gallery/' + href + '/" id="galleryItem" frameborder="0"></iframe>');
+	},
+	itemClick = function(e) {
+		
+		e.preventDefault();
+		var href = $(e.target).attr('href');
+		if (!href) {
+			href = $(e.target).parents('a:first').attr('href');
+		}
+		
+		// Extract the perma from the URL
+		href = href.match(/entry\/(.*?)\//)[1];
+		$('#galleryBg').fadeIn(400, function() { loadItem(href); });
+		$('#galleryItem').show().animate({width:'800px'});
+	},
+	closeClick = function(e) {
+		$('#galleryBg').fadeOut();
+		$('#galleryItem').animate({width:0}).fadeOut();
+		$('#galleryItem iframe').remove();
+	},
+	init = function() {
+		$('#gallery a').click(itemClick);
+		$('#galleryBg').detach().appendTo('body').click(closeClick);
+		$('#galleryItem').css('margin-top', (($(window).height() - $('#galleryItem').height()) / 2) + 'px');
+		$('#galleryItem .close').click(closeClick);
+	};
+	
+	$(init);
+
+};
+
+dx.poll = function(id) {
+
+	var
+	poll = $('#poll' + id),
+	
+	voteCallback = function(data) {
+		
+		// Render out the poll results
+		if (typeof(data.body.items) !== 'undefined' && data.body.items.length > 0) {
+		
+			var out = '<div class="graph"><h4>' + data.body.title + '</h4><ul>', i, count;
+			for (i = 0, count = data.body.items.length; i < count; i++) {
+				var item = data.body.items[i];
+				var bar = item.votes > 0 ? '<div class="bar" style="width:' + (item.percent / 2) + '%;"></div>' : '';
+				out += '<li><span>' + item.title + '</span>' + bar + '<div class="data">' + item.percent + '% - ' + item.votes + ' votes</div></li>';				
+			}
+			out += '</ul></div>';
+			
+			poll.replaceWith(out);
+		
+		}
+		
+	},
+	
+	submitPoll = function(e) {
+		e.preventDefault();
+		var selectedOption = poll.find('input[name="poll_option"]:checked').val();
+		dx.call('poll', 'vote', {id:id, item:selectedOption}, voteCallback);
+	};
+	
+	// Hijack the submit event
+	poll.submit(submitPoll);
+
+};
+
+/* --- AUTO EXECUTING FUNCTIONS --- */
+
+/* Comment form submission stuffs (starts on DOM load) */
+(function() {
+
+	var commentSubmit = function(e) {
+
+		var error = false;
+
+		// Run form validation
+		$('label.error').removeClass('error');
+		if ($('#commentName').length && !$('#commentName').val()) {
+			error = true;
+			$('label[for="commentName"]').addClass('error');
+		}
+		if ($('#commentEmail').length && !$('#commentEmail').val()) {
+			error = true;
+			$('label[for="commentEmail"]').addClass('error');
+		} else if ($('#commentEmail').length) {
+			
+			// Check for valid e-mail
+			var email = $('#commentEmail').val();
+			if (!email.match(/([\w\d]+)@([\w\d]+)\.([\w])/)) {
+				error = true;
+			} else {
+				$('#botProof').val(hex_md5(email));
+			}
+			
+		}
+		if (!$('#commentBody').val()) {
+			error = true;
+			$('label[for="commentBody"]').addClass('error');
+		}
+		
+		return !error;
+	},
+	
+	init = function() {
+		$('#commentForm').submit(commentSubmit);
+	};
+
+	$(init);
+	
+}());
+
+/* Video embed wrapper (jQuery extension) */
+(function($) {
+
+	$.fn.video = function(url) {
+		this.each(function() {
+			$(this).append('<embed width="610" height="350" src="/global/flash/jcplayer.swf" quality="high" pluginspage="http://www.macromedia.com/go/getflashplayer" align="middle" play="true" loop="true" scale="noScale" wmode="window" devicefont="false" bgcolor="#ffffff" name="jcplayer" menu="true" allowfullscreen="true" salign="TL" allowscriptaccess="sameDomain" flashvars="videoURL=' + url + '&amp;autoHide=true&amp;margins=10&amp;offsetY=35&amp;highlightColor=0xf26716" type="application/x-shockwave-flash" />');
+		});
+	};
+
+}(jQuery));
+
+/* YouTube embed (jQuery extension) */
+(function($) {
+	$.fn.youtube = function(id) {
+		this.each(function() {
+			$(this).append('<embed width="540" height="304" src="http://www.youtube.com/v/' + id + '?enablejsapi=1&playerapiid=' + $(this).attr('id') + '" quality="high" pluginspage="http://www.macromedia.com/go/getflashplayer" align="middle" wmode="window" llowscriptaccess="sameDomain" type="application/x-shockwave-flash" />');
+		});
+	};
+}(jQuery));
+
+/* Search */
+(function($) {
+	var
+	
+	defaultText = 'Search for stuff...',
+	$search = null,
+	
+	search = function(e) {
+		var query = $search.val();
+		if (query.length > 0) {
+			window.location = '/search/' + query + '/';
+		}
+		e.preventDefault();
+	},
+	
+	focus = function(e) {
+		if ($search.val() == defaultText) {
+			$search.removeClass('default').val('');
+		}
+	},
+	
+	blur = function(e) {
+		if ($search.val() == '') {
+			$search.addClass('default').val(defaultText);
+		}
+	},
+	
+	init = function() {
+		$search = $('#search input');
+		$search.addClass('default').blur(blur).focus(focus).val(defaultText);
+		$('#search form').submit(search);
+	};
+	$(init);
+	
+}(jQuery));
+
+/* Lightbox for blog image galleries */
+$(function() {
+	if ($('.gallery a').length > 0) {
+		$('.gallery a').lightBox();
+	}
+});
+
+/* AND A MERRY CHRISTMAS! 
+$(function() {
+
+	var
+	
+	phrases = 
+		[
+			'Ho ho ho!<br />Merry Christmas, bitches!',
+			'Fuck yeah! PEPSI!',
+			'Gave that bitch a present. Bitches love presents.',
+			'What I want for christmas is something I haven\'t seen or heard in a long time: Sex.',
+			'I\'m drunk as shit',
+			'Let\'s go punch a reindeer',
+			'Who\'s your daddy?',
+			'Wanna get high?'
+		],
+	
+	santaClick = function(e) {
+		$('#santa').remove();
+		$('#wrapper').css('margin', '0 auto');
+	},
+	
+	init = function() {
+		
+		$('body').append('<div id="santa"><p>' + phrases[Math.floor(Math.random() * phrases.length)] + '<span>Hide me</span></p><span></div>');
+		$('#santa').click(santaClick);
+		
+	};
+	
+	init();
+
+}); */

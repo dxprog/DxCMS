@@ -137,8 +137,7 @@ dx.archives = function() {
 		
 		var minDate = (currentMonth + 1) + '/1/' + currentYear, i, count;
 		buildCalendar(minDate);
-		
-		if (data.body.content.length > 0) {
+		if (data.body.count > 0) {
 			
 			for (i = 0, count = data.body.content.length; i < count; i++) {
 				
@@ -400,17 +399,38 @@ dx.poll = function(id) {
 /* Search */
 (function($) {
 	var
+	
+	defaultText = 'Search for stuff...',
+	$search = null,
+	
 	search = function(e) {
-		var query = $('#search input[type="text"]').val();
+		var query = $search.val();
 		if (query.length > 0) {
 			window.location = '/search/' + query + '/';
 		}
 		e.preventDefault();
 	},
+	
+	focus = function(e) {
+		console.log('hey');
+		if ($search.val() == defaultText) {
+			$search.removeClass('default').val('');
+		}
+	},
+	
+	blur = function(e) {
+		if ($search.val() == '') {
+			$search.addClass('default').val(defaultText);
+		}
+	},
+	
 	init = function() {
+		$search = $('#search input');
+		$search.addClass('default').blur(blur).focus(focus).val(defaultText);
 		$('#search form').submit(search);
 	};
 	$(init);
+	
 }(jQuery));
 
 /* Lightbox for blog image galleries */
