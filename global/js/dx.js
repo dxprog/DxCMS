@@ -220,9 +220,8 @@ dx.comments = function() {
 	// Event callbacks
 	replyClick = function(e) {
 		var
-		$parent = $(e.target).parent(),
-		id = $parent.attr('data-id'),
-		user = $parent.find('.user').text();
+		$parent = $(e.target).parents('article:first'),
+		id = $parent.attr('data-id');
 		$('#comment_parent').val(id);
 		$('#commentBody').focus();
 	},
@@ -410,7 +409,7 @@ dx.poll = function(id) {
 	search = function(e) {
 		var query = $search.val();
 		if (query.length > 0) {
-			window.location = '/search/' + query + '/';
+			window.location = '/search/?q=' + query;
 		}
 		e.preventDefault();
 	},
