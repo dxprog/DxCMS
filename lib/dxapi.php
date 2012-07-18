@@ -270,9 +270,14 @@ namespace Api {
 		/**
 		 * Verifies an incoming signed request
 		 */
-		public static function checkSignature($vars) {
+		public static function checkSignature($vars, $raiseError = true) {
 			
 			$retVal = false;
+			
+			// If this is an internal call, no verification is required
+			if (defined('API_LOCATION') && API_LOCATION == '_internal') {
+				return true;
+			}
 			
 			// Check to make sure the key is valid
 			$key = isset($vars['key']) ? $vars['key'] : false;
@@ -303,19 +308,27 @@ namespace Api {
 						if ($sig == $signature) {
 							$retVal = true;
 						} else {
-							throw new Exception('Signature is invalid', INVALID_SIGNATUREY);
+							if ($raiseError) {
+								throw new Exception('Signature is invalid', INVALID_SIGNATUREY);
+							}
 						}
 					
 					} else {
-						throw new Exception('Provided key is not registered', INVALID_KEY);
+						if ($raiseError) {
+							throw new Exception('Provided key is not registered', INVALID_KEY);
+						}
 					}
 				
 				} else {
-					throw new Exception('This request requires a signature', NO_SIGNATURE);
+					if ($raiseError) {
+						throw new Exception('This request requires a signature', NO_SIGNATURE);
+					}
 				}
 				
 			} else {
-				throw new Exception('Provided key is invalid', INVALID_KEY);
+				if ($raiseError) {
+					throw new Exception('Provided key is invalid', INVALID_KEY);
+				}
 			}
 			
 			return $retVal;
