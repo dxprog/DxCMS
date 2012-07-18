@@ -66,7 +66,19 @@ namespace Api {
 		 * Ratings associated with this item
 		 */
 		public $ratings;
-	 
+		
+		public function __construct($obj = null, $getTags = false) {
+		
+			if (null != $obj) {
+				if ($obj instanceof Content) {
+				
+				} else {
+					$this->_createObjectFromRow($obj, $getTags);
+				}
+			}
+		
+		}
+		
 		public static function getContent($vars) {
 
 			// Get the properties passed
@@ -82,7 +94,7 @@ namespace Api {
 			$offset = isset($vars['offset']) ? is_numeric($vars['offset']) ? $vars['offset'] : 0 : 0;
 			$tag = isset($vars['tag']) ? $vars['tag'] : null;
 			$order = isset($vars['order']) ? $vars['order'] : null;
-			$meta = isset($vars['meta']) ? serialize($vars['meta']) : null;
+			$meta = isset($vars['meta']) ? json_encode($vars['meta']) : null;
 			$noTags = isset($vars['noTags']) ? $vars['noTags'] === 'true' || $vars['noTags'] === true : false;
 			
 			$params = array();
@@ -93,6 +105,7 @@ namespace Api {
 			
 			if (is_numeric($id)) {
 				$where .= 'c.content_id=:id AND ';
+				$max = 1;
 				$params[':id'] = $id;
 			}
 			
@@ -127,6 +140,11 @@ namespace Api {
 					}
 				}
 				$select = substr($select, 0, strlen($select) - 1);
+			} else {
+				$select = 'c.content_id,c.content_title,c.content_type,c.content_body,c.content_date,c.content_perma,c.content_parent';
+				if (DxApi::checkSignature($vars, false)) {
+					$select .= ',c.content_meta';
+				}
 			}
 			
 			if (is_numeric($parent)) {
@@ -202,22 +220,12 @@ namespace Api {
 				$result = Lib\Db::Query($query, $params);
 				$retVal->content = array();
 				while ($row = Lib\Db::Fetch($result)) {
-					$obj = new stdClass();
-					$obj->id = isset($row->content_id) ? $row->content_id : null;
-					$obj->title = isset($row->content_title) ? $row->content_title : null;
-					$obj->perma = isset($row->content_perma) ? $row->content_perma : null;
-					$obj->date = isset($row->content_date) ? $row->content_date : null;
-					$obj->body = isset($row->content_body) ? $row->content_body : null;
-					$obj->type = isset($row->content_type) ? $row->content_type : null;
-					$obj->children = $noCount === false ? $row->children_count : 0;
-					$obj->meta = isset($row->content_meta) ? json_decode($row->content_meta) : null;
-					$obj->rating = new stdClass();
-					$obj->rating->count = isset($row->content_rating_count) ?: null;
-					$obj->rating->value = isset($row->content_rating) ?: null;
-					if (!$noTags) {
-						$obj->tags = self::getTags(array('id'=>$obj->id, 'noCount'=>true));
+					if (isset($row->content_type) && class_exists('Api\\' . $row->content_type)) {
+						$className = 'Api\\' . $row->content_type;
+						$retVal->content[] = new $className($row);
+					} else {
+						$retVal->content[] = new Content($row, !$noTags);
 					}
-					$retVal->content[] = $obj;
 				}
 			}
 			
@@ -301,11 +309,12 @@ namespace Api {
 			$retVal = array();
 			
 			// Get a date for every month/year there was a post
-			$result = Lib\Db::Query("SELECT MONTH(FROM_UNIXTIME(content_date)) AS month, YEAR(FROM_UNIXTIME(content_date)) AS year FROM content GROUP BY year, month ORDER BY year DESC, month DESC");
+			$result = Lib\Db::Query('SELECT COUNT(1) AS total, MONTH(FROM_UNIXTIME(content_date)) AS month, YEAR(FROM_UNIXTIME(content_date)) AS year FROM content WHERE content_date <= ' . time() . ' GROUP BY year, month ORDER BY year DESC, month DESC');
 			while ($row = Lib\Db::Fetch($result)) {
 				$t = null;
 				$t->timestamp = mktime(0, 0, 0, $row->month, 1, $row->year) + 3600;
 				$t->text = date("F Y", $t->timestamp);
+				$t->count = $row->total;
 				$retVal[] = $t;
 			}
 			
@@ -319,7 +328,6 @@ namespace Api {
 		public static function logContentView($vars) {
 			
 			// Fancy caching happens here
-			global $_apiPath;
 			$cacheKey = 'ContentHits';
 			$forceWrite = isset($vars['forceWrite']) ? $vars['forceWrite'] : false;
 			$hits = \Lib\Cache::Get($cacheKey);
@@ -354,7 +362,7 @@ namespace Api {
 					}
 					$query = substr($query, 0, strlen($query) - 1);
 					Lib\Db::Query($query);
-					
+
 					// Null out the array so we can start over
 					$hits = null;
 					\Lib\Cache::Set('ContentHits_Date', time());
@@ -400,17 +408,14 @@ namespace Api {
 			if (!isset($vars['max']) || !is_numeric($vars['max'])) {
 				$vars['max'] = 5;
 			}
-			$params[':max'] = $vars['max'];
 			
 			// Get the most viewed posts within the time frame
-			$commentWeight = self::_getAvgHitsPerComment();
-			$result = Lib\Db::Query('SELECT COUNT(DISTINCT h.hit_ip) + (SELECT COUNT(1) * ' . $commentWeight . ' FROM content WHERE content_parent=c.content_id AND content_type="cmmnt" AND content_date >= :minDate) AS total, c.content_id, c.content_title, c.content_perma FROM hits h INNER JOIN content c ON c.content_id=h.content_id WHERE h.hit_date >= :minDate' . $where . ' GROUP BY h.content_id ORDER BY total DESC, c.content_date DESC LIMIT :max', $params);
+			$params[':commentWeight'] = self::_getAvgHitsPerComment();
+			$result = Lib\Db::Query('SELECT COUNT(DISTINCT h.hit_ip) + (SELECT COUNT(1) * :commentWeight FROM content WHERE content_parent=c.content_id AND content_date >= :minDate) AS total, c.content_id, c.content_title, c.content_perma, c.content_meta FROM hits h INNER JOIN content c ON c.content_id=h.content_id WHERE h.hit_date >= :minDate' . $where . ' GROUP BY h.content_id ORDER BY total DESC, c.content_date DESC LIMIT ' . $vars['max'], $params);
+			
 			while ($row = Lib\Db::Fetch($result)) {
-				$t = null;
+				$t = new Content($row);
 				$t->count = $row->total;
-				$t->id = $row->content_id;
-				$t->title = $row->content_title;
-				$t->perma = $row->content_perma;
 				$retVal[] = $t;
 			}
 
@@ -469,34 +474,33 @@ namespace Api {
 			$id = isset($obj->id) && is_numeric($obj->id) ? intVal($obj->id) : null;
 			
 			$params = array();
-			$params['title'] = isset($obj->title) ? $obj->title : null;
-			$params['parent'] = isset($obj->parent) ? $obj->parent : 0;
-			$params['body'] = isset($obj->body) ? $obj->body : null;
-			$params['type'] = isset($obj->type) ? $obj->type : null;
-			$params['meta'] = isset($obj->meta) ? json_encode($obj->meta) : null;
-			$params['date'] = isset($obj->date) ? $obj->date : time();
+			$params[':title'] = isset($obj->title) ? $obj->title : null;
+			$params[':parent'] = isset($obj->parent) ? $obj->parent : 0;
+			$params[':body'] = isset($obj->body) ? $obj->body : null;
+			$params[':type'] = isset($obj->type) ? $obj->type : null;
+			$params[':meta'] = isset($obj->meta) ? json_encode($obj->meta) : '{}';
+			$params[':date'] = isset($obj->date) ? $obj->date : time();
 			
 			if ($id !== null && $id > 0) {
 				// If there is an ID set, do an UPDATE
-				$params['id'] = $id;
-				$query = 'UPDATE content SET content_title=:title, content_body=:body, content_date=:date, content_meta=:meta, content_type=:type WHERE content_id=:id';
-				Lib\Db::Query($query);
+				$params[':id'] = $id;
+				$query = 'UPDATE content SET content_title=:title, content_parent=:parent, content_body=:body, content_date=:date, content_meta=:meta, content_type=:type WHERE content_id=:id';
+				Lib\Db::Query($query, $params);
 			} else {
 				// Otherwise, do an INSERT
-				$params['perma'] = isset($obj->perma) ? $obj->perma : isset($obj->title) ? self::_createPerma($obj->title) : null;
-				print_r($params);
+				$params[':perma'] = isset($obj->perma) ? $obj->perma : isset($obj->title) ? self::_createPerma($obj->title) : null;
 				$query = 'INSERT INTO content (content_title, content_perma, content_body, content_date, content_type, content_parent, content_meta) VALUES ';
 				$query .= '(:title, :perma, :body, :date, :type, :parent, :meta)';
 				$id = $obj->id = Lib\Db::Query($query, $params);
 			}
 			
 			// Sync the tags
-			if ($id !== true && isset($obj->tags)) {
+			if ($id && isset($obj->tags)) {
 				self::_syncTags($obj);
 			}
 		
 			$retVal = null;
-			if ($id !== null) {
+			if ($id) {
 				$retVal = self::getContent(array('id'=>$id));
 			}
 
@@ -517,43 +521,51 @@ namespace Api {
 			$max = isset($vars['max']) && is_numeric($vars['max']) ? $vars['max'] : 15;
 			$query = isset($vars['q']) && strlen($vars['q']) > 0 ? explode(' ', preg_replace($stop, '', $vars['q'])) : false;
 			$noTags = isset($vars['noTags']) && $vars['noTags'] === true;
+			$contentType = isset($vars['contentType']) ? $vars['contentType'] : '';
 			$retVal = null;
+			$params = array();
 			
 			// If there's a query, do the search
-			if (count($query) > 0) {
+			if ($query && count($query) > 0) {
 				$where = '(';
 				$select = '';
+				$pCount = 0;
 				foreach ($query as $item) {
 					$item = trim($item);
 					if (strlen($item) > 0) {
-						$item = db_Escape($item);
-						$select .= 'IF(c.content_title LIKE "%' . $item . '%", 10, 0) + IF(c.content_body LIKE "%' . $item . '%", 1, 0) + ';
-						$where .= '(c.content_body LIKE "%' . $item . '%" OR c.content_title LIKE "%' . $item . '%") OR ';
+						$pCount++;
+						$pName = ':param' . $pCount;
+						$params[$pName] = '%' . $item . '%';
+						$select .= 'IF(c.content_title LIKE ' . $pName . ', 10, 0) + IF(c.content_body LIKE ' . $pName . ', 1, 0) + ';
+						$where .= '(c.content_body LIKE ' . $pName . ' OR c.content_title LIKE ' . $pName . ') OR ';
 					}
 				}
 				
 				/* Include tag search/weighting */
 				$where .= 'content_id IN (SELECT content_id FROM tags WHERE ';
 				$select .= '((SELECT COUNT(1) FROM tags t WHERE t.content_id=c.content_id AND (';
-				foreach ($query as $item) {
-					$item = trim($item);
-					if (strlen($item) > 0) {
-						$where .= 'tag_name LIKE "%' . $item . '%" OR ';
-						$select .= 'tag_name LIKE "%' . $item . '%" OR ';
-					}
+				foreach ($params as $key=>$val) {
+					$where .= 'tag_name LIKE ' . $key . ' OR ';
+					$select .= 'tag_name LIKE ' . $key . ' OR ';
+				}
+				
+				// Content type
+				if ($contentType) {
+					$params[':type'] = $contentType;
+					$contentType = 'AND c.content_type = :type ';
 				}
 				
 				/* Clean things up and pull the query together */
 				$where = substr($where, 0, strlen($where) - 3) . ')';
 				$select = substr($select, 0, strlen($select) - 3) . ')';
 				$paging = 'LIMIT ' . ($page * $max - $max) . ', ' . $max;
-				$query = 'SELECT *, ' . $select . ') * 5) AS weight FROM content c WHERE ' . $where . ') AND c.content_parent=0 ORDER BY weight DESC, c.content_date DESC ' . $paging;
+				$query = 'SELECT *, ' . $select . ') * 5) AS weight FROM content c WHERE ' . $where . ') ' . $contentType . 'AND c.content_parent=0 ORDER BY weight DESC, c.content_date DESC ' . $paging;
 				
 				/* Get the amount of results this search will return */
 				$count = 'SELECT COUNT(1) AS count FROM content c WHERE ' . $where . ')';
-				$retVal->count = Lib\Db::Fetch(Lib\Db::Query($count))->count;
+				$retVal->count = Lib\Db::Fetch(Lib\Db::Query($count, $params))->count;
 				
-				$result = Lib\Db::Query($query);
+				$result = Lib\Db::Query($query, $params);
 				$retVal->results = array();
 				while ($row = Lib\Db::Fetch($result)) {
 					$obj = null;
@@ -572,6 +584,19 @@ namespace Api {
 			}
 			
 			return $retVal;
+			
+		}
+		
+		/**
+		 * Deletes a content item from the database. Requires authentication
+		 */
+		public static function deleteContent($vars) {
+			
+			$id = isset($vars['id']) && is_numeric($vars['id']) ? $vars['id'] : false;
+			if ($id && DxApi::checkSignature($vars)) {
+				$params = array( ':id' => $id);
+				Lib\Db::Query('DELETE FROM content WHERE content_id = :id', $params);
+			}
 			
 		}
 		
@@ -607,14 +632,19 @@ namespace Api {
 				
 				// Loop through all the tags and add them
 				$query = 'INSERT INTO tags VALUES ';
+				$params = array();
+				$tagCount = 0;
 				foreach	($obj->tags as $tag) {
 					if (is_object($tag)) {
 						$tag = $tag->name;
 					}
-					$query .= '(' . $obj->id . ', "' . db_Escape($tag) . '"),';
+					$tagCount++;
+					$pName = 'tag' . $tagCount;
+					$params[$pName] = $tag;
+					$query .= '(' . $obj->id . ', :' . $pName . '),';
 				}
 				$query = substr($query, 0, strlen($query) - 1);
-				Lib\Db::Query($query);
+				Lib\Db::Query($query, $params);
 				
 			}
 			
@@ -636,13 +666,34 @@ namespace Api {
 		 */
 		private static function _createPerma ($Perma)
 		{
-			$Remove = array ("'", "\"", ".", ",", "~", "!", "?", "<", ">", "@", "#", "$", "%", "^", "&", "*", "(", ")", "+", "=", "/", "\\", "|", "{", "}", "[", "]", "-", "--");
+			$Remove = array ('"', '\'', '.', ':', ',', '~', '!', '?', '<', '>', '@', '#', '$', '%', '^', '&', '*', '(', ')', '+', '=', '/', '\\', '|', '{', '}', '[', ']', '-', '--');
 			for ($i = 0; $i < sizeof ($Remove); $i++)
 				$Perma = str_replace ($Remove[$i], "", $Perma);
 			$Perma = str_replace ("  ", " ", $Perma);
 			$Perma = str_replace (" ", "-", $Perma);
 			return strtolower ($Perma);
 		}	
+		
+		/**
+		 * Copies parameters to the current object from a database row
+		 */
+		protected function _createObjectFromRow($obj, $getTags = false) {
+			$this->id = isset($obj->content_id) ? $obj->content_id : null;
+			$this->title = isset($obj->content_title) ? $obj->content_title : null;
+			$this->perma = isset($obj->content_perma) ? $obj->content_perma : null;
+			$this->date = isset($obj->content_date) ? $obj->content_date : null;
+			$this->body = isset($obj->content_body) ? $obj->content_body : null;
+			$this->type = isset($obj->content_type) ? $obj->content_type : null;
+			$this->parent = isset($obj->content_parent) ? $obj->content_parent : null;
+			$this->children = isset($obj->children_count) ? $obj->children_count : 0;
+			$this->meta = isset($obj->content_meta) ? json_decode($obj->content_meta) : null;
+			$this->rating = new stdClass();
+			$this->rating->count = isset($obj->content_rating_count) ?: null;
+			$this->rating->value = isset($obj->content_rating) ?: null;
+			if ($getTags) {
+				$this->tags = self::getTags(array('id'=>$this->id, 'noCount'=>true));
+			}
+		}
 		
 	}
 }
