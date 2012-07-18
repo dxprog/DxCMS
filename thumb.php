@@ -1,48 +1,63 @@
 <?php
 
-$Max = 125;
+$Max = 280;
+
+// ob_start();
+
+$outWidth = isset($_GET['width']) ? $_GET['width'] : false;
+$outHeight = isset($_GET['height']) ? $_GET['height'] : false;
+
+$outFile = md5 ($_GET['file'] . '_' . $outWidth . '_' . $outHeight);
+$file = $_GET['file'];
 
 // Check to see if there's a cached thumbnail already
-if (file_exists ("./cache/".md5 ($_GET["file"]).".png")) {
-	header ("Location: ./cache/".md5 ($_GET["file"]).".png");
-	exit ();
+if (file_exists ('cache/' . $outFile . '.png') && filemtime('cache/' . $outFile . '.png') > filemtime($file) && filesize('cache/' . $outFile . '.png') > 1024) {
+	header ('Location: cache/' . $outFile . '.png');
+	exit;
+}
+
+// If not http, map the path
+$file = $file{0} == '/' ? '.' . $file : $file;
+if (strpos($file, 'http') !== 0) {
+	$file = realpath($file);
 }
 
 // Load the image based on extension
-switch (strtolower (substr ($_GET["file"], strlen ($_GET["file"]) - 3, 3))) {
-case "jpg":
-	$Image = imagecreatefromjpeg ($_GET["file"]);
-	break;
-case "png":
-	$Image = imagecreatefrompng ($_GET["file"]);
-	break;
+switch (strtolower(end(explode('.', $file)))) {
+	case 'jpeg':
+	case 'jpg':
+		$img = imagecreatefromjpeg ($file);
+		break;
+	case 'png':
+		$img = imagecreatefrompng ($file);
+		break;
 }
 
 // Get the dimensions of the image and figure out the appropriate, rescaled size
-$Width = imagesx ($Image);
-$Height = imagesy ($Image);
-$NWidth = $Width < $Max ? $Width : $Max;
-$NHeight = $Height < $Max ? $Height : $Max;
+$imgWidth = imagesx ($img);
+$imgHeight = imagesy ($img);
+$scaleWidth = $outWidth;
+$scaleHeight = $outHeight;
+$x = $y = 0;
 
-if ($Width > $Max && $Width > $Height) {
-	$NWidth = $Max;
-	$NHeight = $Max * ($Height / $Width);
+// Scale depending on what dimensions were passed
+if (!$outWidth && $outHeight) {
+	$outWidth = $scaleWidth = floor($imgWidth / $imgHeight * $outHeight);
+} else if (!$outHeight && $outWidth) {
+	$outHeight = $scaleHeight = floor($imgHeight / $imgWidth * $outWidth);
+} else {
+	
+	
+	
 }
-
-if ($Height > $Max && $Height > $Width) {
-	$NHeight = $Max;
-	$NWidth = $Max * ($Width / $Height);
-}
-
-$x = ($Max - $NWidth) / 2;
-$y = ($Max - $NHeight) / 2;
 
 // Create the new image and copy the resized one over
-$Out = imagecreatetruecolor ($Max, $Max);
-imagecopyresampled ($Out, $Image, $x, $y, 0, 0, $NWidth, $NHeight, $Width, $Height);
+$out = imagecreatetruecolor ($outWidth, $outHeight);
+imagecopyresampled ($out, $img, $x, $y, 0, 0, $scaleWidth, $scaleHeight, $imgWidth, $imgHeight);
 
 // Save out the file and do a redirect
-imagepng ($Out, "./cache/".md5 ($_GET["file"]).".png");
-header ("Location: ./cache/".md5 ($_GET["file"]).".png");
+imagepng ($out, './cache/' . $outFile . '.png');
+header ('Expires: ' . date('r', strtotime('+1 year')));
+header ('Location: ./cache/' . $outFile . '.png');
 
 ?>
