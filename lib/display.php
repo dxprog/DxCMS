@@ -19,6 +19,7 @@ namespace Lib {
 		 **/
 		public static function render()
 		{
+		
 			if (!self::$_rendered) {
 				
 				$out = file_get_contents(VIEW_PATH . self::$_theme . '/' . self::$_pageTemplate . '.tpl');
@@ -78,9 +79,9 @@ namespace Lib {
 		public static function compile($data, $template, $cacheKey = false) {
 			
 			global $_baseURI, $_theme;
-			$retVal = '';
+			$retVal = false;
 			
-			if (!self::$_rendered) {
+			if (!self::$_rendered && file_exists(VIEW_PATH . self::$_theme . '/' . $template . '.xslt')) {
 				
 				$retVal = false !== $cacheKey ? Cache::Get($cacheKey) : false;
 				if (!$retVal || !is_string($retVal)) {		
