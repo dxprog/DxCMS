@@ -18,11 +18,8 @@ namespace Controller {
 		// Dynamic function for formatting a post with all the included extensions
 		public static $_funcFormatter = null;
 		
-		/**
-		 * Renders page depending on incoming parameters
-		 */
-		public static function render() {
-
+		protected static function _init() {
+			
 			// Get a list of all the post formatting static functions and create a master formatting static function from those
 			$formatPost = '';
 			foreach (self::$_extensions as $extension) {
@@ -34,8 +31,19 @@ namespace Controller {
 			self::$_funcFormatter = create_function('$body', $formatPost);
 			
 			// Register the generic display extensions
-			Lib\Display::registerExtension('Content', 'sidebarTagcloud', 'tagcloud');
+			Lib\Display::registerExtension('Content', 'sidebarTagCloud', 'tagcloud');
 			Lib\Display::registerExtension('Content', 'sidebarPopular', 'popular');
+			Lib\Display::registerExtension('Content', 'sidebarPopularArt', 'popularart');
+			
+		}
+		
+		/**
+		 * Renders page depending on incoming parameters
+		 */
+		public static function render() {
+			
+			// Initialize
+			self::_init();
 			
 			// If no action, default to main page
 			if (!isset($_GET['action']) || !$_GET['action']) {
@@ -103,11 +111,11 @@ namespace Controller {
 				
 				// Get user comments if there are any to get
 				if ($post->children > 0) {
-					$comments = Lib\Dx::call('content', 'getContent', array('parent'=>$post->id, 'max'=>0, 'order'=>'asc', 'noCount'=>true, 'noTags'=>true), 0);
-					for ($i = 0, $count = sizeof($comments->body->content); $i < $count; $i++) {
-						$comments->body->content[$i] = self::_formatComment($comments->body->content[$i]);
+					$comments = Api\Content::getContent(array( 'parent' => $post->id, 'max' => 0, 'order' => 'asc', 'noCount' => true, 'noTags' => true ));
+					for ($i = 0, $count = sizeof($comments->content); $i < $count; $i++) {
+						$comments->content[$i] = self::_formatComment($comments->content[$i]);
 					}
-					$templateData->comments = $comments->body->content;
+					$templateData->comments = $comments->content;
 				}
 				
 				// Get user info should there be some
@@ -126,15 +134,18 @@ namespace Controller {
 		private static function _getRss() {
 			
 			Lib\Display::setTemplate('rss');
-			$obj = Lib\Dx::call('content', 'getContent', array('max'=>15, 'parent'=>0, 'noCount'=>true))->body->content;
-			foreach ($obj as &$item) {
-				$item = self::_formatPost($item, true);
-				$item->body = $item->body;
-				$item->rfcDate = date('r', $item->timestamp);
+			$retVal = Lib\Cache::Get('RssFeed');
+			if (false === $retVal) {
+				$obj = Api\Content::getContent(array('max'=>15, 'parent'=>0, 'noCount'=>true));
+				if (is_object($obj) && is_array($obj->content)) {
+					foreach ($obj->content as &$item) {
+						$item = self::_formatPost($item, true);
+					}
+					$retVal = Lib\Display::compile($obj->content, 'content_rss', 'RssFeed');
+				}
 			}
 			header('Content-type: text/xml');
-			$render = Lib\Display::compile($obj, 'content_rss', 'RssFeed');
-			Lib\Display::setVariable('rss', $render);
+			Lib\Display::setVariable('rss', $retVal);
 			
 		}
 
@@ -208,7 +219,7 @@ namespace Controller {
 					$sync->meta->user_avatar = $user->avatar;
 					$sync->meta->user_auth = $user->auth_type;
 				}
-				
+
 				// If all is good
 				if ($sync->body) {
 					$ret = Api\Content::syncContent(null, $sync);
@@ -329,7 +340,7 @@ namespace Controller {
 				
 				// Do the search and start populating our outgoing object with related data
 				$obj = new stdClass();
-				$page = intVal($_GET['p']);
+				$page = isset($_GET['p']) && is_numeric($_GET['p']) ? intVal($_GET['p']) : 1;
 				$obj->query = $_GET['q'];
 				$obj->results = Lib\Dx::call('content', 'search', array('q'=>$_GET['q'], 'noTags'=>true, 'page'=>$page, 'max'=>SEARCH_RESULTS_PER_PAGE));
 				$obj->speed = substr((string)$obj->results->metrics->gen_time, 0, 7);
@@ -338,7 +349,7 @@ namespace Controller {
 				// Figure up the paging buttons
 				$numPages = ceil($obj->results->body->count / SEARCH_RESULTS_PER_PAGE);
 				$localDir = str_replace ('index.php', '', $_SERVER['SCRIPT_NAME']);
-				$rawPage = preg_replace ('@/page/(\d+)/@', '/', str_replace ($localDir, '/', $_SERVER['REQUEST_URI']));
+				$rawPage = preg_replace ('@/page/(\d+)/@', '/', str_replace($localDir, '/', $_SERVER['REQUEST_URI']));
 				$obj->page = $page;
 				$obj->firstResult = $page * SEARCH_RESULTS_PER_PAGE - SEARCH_RESULTS_PER_PAGE + 1;
 
@@ -355,7 +366,7 @@ namespace Controller {
 					$item = self::_formatPost($item, true);
 					$item->date = date('F j, Y', $item->timestamp);
 					$item->body = preg_replace('/<[^>]*>/', '', $item->body);
-					$item->body = _truncateText($item->body, 140);
+					$item->body = self::_truncateText($item->body, 140);
 				}
 				
 				// Display
@@ -413,15 +424,26 @@ namespace Controller {
 			return Lib\Display::compile((string)$obj->xml, "content_archives");
 			
 		}
+		
+		public static function sidebarPopularArt() {
+			
+			$cacheKey = 'sidebar_populatart';
+			$retVal = Lib\Cache::get($cacheKey);
+			if ($retVal === false) {
+				$obj = Api\Content::getPopular(array( 'max' => 4, 'contentType' => 'art' ));
+				$retVal = Lib\Display::compile($obj, 'content_popularart', $cacheKey);
+			}
+			return $retVal;
+			
+		}
 
 		public static function sidebarPopular ()
 		{
+		
 			$cacheKey = 'sidebar_mostpopular';
 			$retVal = Lib\Cache::Get($cacheKey);
-			
 			if ($retVal === false) {
-				$obj = Lib\Dx::Call('content', 'getPopular', array('max'=>5), 0);
-				$obj = $obj->body;
+				$obj = Api\Content::getPopular( array('max'=>5) );
 				$retVal = Lib\Display::compile($obj, 'content_mostpopular', $cacheKey);
 			}
 			
@@ -435,22 +457,14 @@ namespace Controller {
 			$retVal = Lib\Cache::Get($cacheKey);
 			if ($retVal === false) {
 				// Retrieve the top 25 tags
-				$obj = Lib\Dx::call('content', 'getTagsByPopularity', array('max'=>25, 'type'=>'blog'), 0);
-				$obj = $obj->body;
-				$retVal = Lib\Display::compile($obj, 'content_tagcloud');
+				$obj = Api\Content::getTagsByPopularity(array( 'max'=>25, 'type'=>'blog' ));
+				$retVal = Lib\Display::compile($obj, 'content_tagcloud', $cacheKey);
 			}
 			
 			return $retVal;
 		}
-
-		static function revertXMLSafe ($string)
-		{
-			$replace = array ("\"", "'", ">", "<", "&");
-			$find = array ("&quot;", "&apos;", "&gt;", "&lt;", "&amp;");
-			return str_replace ($find, $replace, $string);
-		}
 		 
-		static function _truncateText ($text, $length)
+		private static function _truncateText ($text, $length)
 		{
 
 			$retVal = $text;
@@ -465,7 +479,7 @@ namespace Controller {
 
 		}
 		
-		private static function _formatPost ($post, $convBreak = false) {
+		protected static function _formatPost ($post, $convBreak = false) {
 
 			global $_baseURI, $_extFormatPost;
 			
@@ -531,6 +545,12 @@ namespace Controller {
 			$comment->body = $body;
 			$comment->rfcTime = date ("Y-m-d\TH:i:s", (int)$comment->date);
 			$comment->date = date("F j, Y", (int)$comment->date);
+			
+			if (!isset($comment->meta->user_auth) && isset($comment->meta->user_email)) {
+				// Generate a gravatar path
+				$comment->meta->user_avatar = 'http://www.gravatar.com/avatar/' . md5(strtolower(trim($comment->meta->user_email)));
+			}
+			
 			return $comment;
 
 		}
