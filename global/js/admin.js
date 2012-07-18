@@ -15,6 +15,7 @@ var admin = {};
 	formSubmit = function(e) {
 		if (!submitOkay) {
 			e.preventDefault();
+			return false;
 		}
 	},
 	titleBlur = function(e) {
@@ -59,11 +60,41 @@ var admin = {};
 				break;
 		}
 	},
+	
+	ckeditor = function() {
+		if (typeof CKEDITOR == 'object') {
+			CKEDITOR.replace( 'body',
+				{
+					extraPlugins : 'bbcode',
+					// Remove unused plugins.
+					removePlugins : 'bidi,button,dialogadvtab,div,filebrowser,flash,format,forms,horizontalrule,iframe,indent,justify,liststyle,pagebreak,showborders,stylescombo,table,tabletools,templates',
+					// Width and height are not supported in the BBCode format, so object resizing is disabled.
+					disableObjectResizing : true,
+					// Define font sizes in percent values.
+					toolbar :
+					[
+						['Source', '-', 'Undo','Redo'],
+						['Find','Replace','-','SelectAll','RemoveFormat'],
+						['Link', 'Unlink', 'Image'],
+						['Bold', 'Italic','Underline'],
+						['Maximize']
+					],
+					// Strip CKEditor smileys to those commonly used in BBCode.
+					smiley_images : [],
+					smiley_descriptions : [],
+					
+					height:400
+				}
+			);
+		}
+	},
+	
 	init = function() {
-		$('#title').keydown(titleKeyDown).blur(titleBlur);
+		$('#title').keyup(titleKeyDown).blur(titleBlur);
 		$('[type="file"]').change(uploadFile);
 		$('#body form').submit(formSubmit);
 		$('#body .date').datepicker();
+		ckeditor();
 		window.uploadComplete = uploadComplete;
 	};
 	$(init);
@@ -98,7 +129,6 @@ admin.poll = function() {
 				out += items[i] + (i + 1 < count ? ',' : '');
 			}
 		}
-		alert(out);
 		$('#items').val(out);
 	},
 
