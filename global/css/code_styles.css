@@ -10,6 +10,7 @@
 	padding: 0px 0px 5px 0px;
 	width: 620px;
 	margin-top: 10px;
+	color:#839496;
 }
 
 .code ol li {
@@ -32,15 +33,15 @@ code {
 	width: 620px;
 	font: 12px "Courier", monospace;
 	display: none;
-	background: #fff;
+	background: #002b36;
 	border: 1px solid #000;
 	padding: 5px;
 	margin-top: 10px;
 }
 
-li span.N{ color:#ff0000; } /* Numbers */
-li span.S{ color:#008080; } /* Strings */
-li span.C{ color:#008000; } /* Comments */
-li span.K{ color:#0000ff; } /* Keywords */
-li span.V{ color:#000080; } /* Vars */
-li span.D{ color:#0000ff; } /* Defines */
+li span.N{ color:#d33682; } /* Numbers */
+li span.S{ color:#2aa198; } /* Strings */
+li span.C{ color:#839496; } /* Comments */
+li span.K{ color:#268bd2; } /* Keywords */
+li span.V{ color:#eee8d5; } /* Vars */
+li span.D{ color:#d33682; } /* Defines */
