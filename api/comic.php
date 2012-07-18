@@ -9,33 +9,37 @@ namespace Api {
  
 	use Lib;
  
-	class Comic {
+	class Comic extends Content {
 
-		public $id;
-		public $title;
-		public $perma;
-		public $date;
 		public $sj_id;
 		public $image;
 		public $next = null;
 		public $previous = null;
 
-		public function __construct($item) {
+		public function __construct($obj, $getNeighbors = false) {
 			
-			if ($item) {
-				$this->id = $item->content_id;
-				$this->title = $item->content_title;
-				$this->perma = $item->content_perma;
-				$this->date = intVal($item->content_date);
-				$date = date("Ymd", $this->date);
-				$this->image = 'cm_' . $date . '_' . substr(md5($date), 0, 1) . '.png';
-				$this->sj_id = @unserialize($item->content_meta)->sj_id;
+			if (is_object($obj)) {
+				
+				if ($obj instanceof Comic) {
+				
+				} else {
+					$this->_createObjectFromRow($obj, false);
+					$date = date('Ymd', $this->date);
+					$this->image = 'cm_' . $date . '_' . substr(md5($date), 0, 1) . '.png';
+					$this->sj_id = isset($this->meta->sj_id) ? $this->meta->sj_id : 0;
+					if ($getNeighbors) {
+						$this->next = self::_getComicNeighbor($this->date, 'next');
+						$this->previous = self::_getComicNeighbor($this->date, 'prev');
+					}
+				}
 			}
 			
 		}
 
 		public static function getComic($vars) {
-		
+			
+			$retVal = false;
+			
 			// See if we're getting a particular comic
 			$where = '';
 			$params = array();
@@ -46,27 +50,30 @@ namespace Api {
 			
 			$result = Lib\Db::Query('SELECT * FROM content WHERE content_type="comic" AND ' . $where . '1 ORDER BY content_date DESC LIMIT 1', $params);
 			$row = Lib\Db::Fetch($result);
-			$retVal = new Comic($row);
-			$retVal->next = self::_getComicNeighbor($retVal->date, 'next');
-			$retVal->previous = self::_getComicNeighbor($retVal->date, 'prev');
+			if ($row) {
+				$retVal = new Comic($row, true);
+			}
+			
 			return $retVal;
 		
 		}
 		
 		private static function _getComicNeighbor($date, $dir) {
 		
+			$retVal = null;
 			$query = '';
-			switch ($dir) {
-				case 'next':
-					$query = 'SELECT * FROM content WHERE content_type="comic" AND content_date > ' . $date . ' ORDER BY content_date ASC LIMIT 1';
-					break;
-				case 'prev':
-					$query = 'SELECT * FROM content WHERE content_type="comic" AND content_date < ' . $date . ' ORDER BY content_date DESC LIMIT 1';
-					break;
+			$params = array( ':date'=>$date );
+			$sort = $dir == 'next' ? 'ASC' : 'DESC';
+			$opr = $dir == 'next' ? '>' : '<';
+			$query = 'SELECT * FROM content WHERE content_type="comic" AND content_date ' . $opr . ' :date ORDER BY content_date ' . $sort . ' LIMIT 1';
+			
+			$result = Lib\Db::Query($query, $params);
+			if ($result && $result->count > 0) {
+				$row = Lib\Db::Fetch($result);
+				$retVal = new Comic($row);
 			}
 			
-			$row = Lib\Db::Fetch(Lib\Db::Query($query));
-			return new Comic($row);
+			return $retVal;
 		
 		}
 
