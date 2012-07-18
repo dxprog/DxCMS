@@ -3,10 +3,11 @@
 /**
  * dxprog.com PHP library
  */
- 
+
+
 // Used to keep track of page generation time
 $_begin = microtime (true);
- 
+
 // Include base libraries
 require_once('./lib/aal.php');
 
@@ -23,7 +24,7 @@ Lib\Display::setVariable('title', $_title);
 // Handle URL and templating things
 $found = Lib\Url::Rewrite('config/rewrites.json');
 $GLOBALS['_baseURI'] = current(explode('?', Lib\Url::getRawUrl()));
-Lib\Display::setTheme('dx2010');
+Lib\Display::setTheme('dx2012');
 Lib\Display::setTemplate('default');
 Lib\Display::setVariable('baseuri', $GLOBALS['_baseURI']);
 
@@ -36,32 +37,38 @@ if (!$found) {
 	
 } else {
 
-
-
 	// Check to see which page must be included
 	$_page = isset($_GET['page']) ? $_GET['page'] : null;
 	
-	if (!$_page || !is_readable('./controller/' . $_page . '.php')) {
+	if (!$_page) {
 		$_page = 'content';
 	}
 	
-	// Include the config file if it exists
-	if (file_exists('./config/config.' . $_page . '.php')) {
-		include('./config/config.' . $_page . '.php');
-	}
+	// Make sure that there exists a page for the request
+	if (!is_readable('./controller/' . $_page . '.php')) {
+		header('HTTP/1.1 404 Content Not Found');
+		Lib\Display::showError(404, 'Sorry, but we couldn\'t find what you were looking for.');
+	} else {
+	
+		// Include the config file if it exists
+		if (file_exists('./config/config.' . $_page . '.php')) {
+			include('./config/config.' . $_page . '.php');
+		}
 
-	// Search for any related extensions and include them
-	$exp = '/(' . $_page . '|main).ext.(\w+).php/';
-	if ($dir = opendir ('./controller/ext')) {
-		while (($file = readdir ($dir)) !== false) {
-			if (preg_match ($exp, $file)) {
-				include ('./controller/ext/' . $file);
+		// Search for any related extensions and include them
+		$exp = '/(' . $_page . '|main).ext.(\w+).php/';
+		if ($dir = opendir ('./controller/ext')) {
+			while (($file = readdir ($dir)) !== false) {
+				if (preg_match ($exp, $file)) {
+					include ('./controller/ext/' . $file);
+				}
 			}
 		}
-	}
 
-	// Turn control over to the requested page
-	call_user_func(array('Controller\\' . $_page, 'render'));
+		// Turn control over to the requested page
+		call_user_func(array('Controller\\' . $_page, 'render'));
+		
+	}
 	
 }
 
