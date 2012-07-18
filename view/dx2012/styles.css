@@ -1,0 +1,179 @@
+* { margin:0; padding:0; }
+body { background:#181f24; font-family:Georgia, serif; line-height:1; }
+ul { list-style:none }
+a img { border:0; }
+
+body > header { background:#0c0e0f; position:relative; }
+body > footer { background:#0c0e0f; padding:20px; color:#fff; }
+h1, nav a { font:26px/1 Georgia, serif; color:#fff; text-transform:lowercase; text-decoration:none; }
+h1 { position:absolute; left:25px; bottom:12px; font-size:30px; }
+nav ul { list-style:none; margin:0 auto; width:560px; *overflow:hidden; }
+nav ul:after { content:'.'; display:block; height:0; clear:both; visibility:hidden; }
+nav li { float:left; padding:12px 10px; position:relative; }
+nav li.selected { background:#025159; }
+nav li.selected:after { content:'.'; position:absolute; display:block; width:100%; background:url(images/nav_caret.png) no-repeat center bottom; left:0px; bottom:-9px; height:0; padding:9px 0 0; overflow:hidden; }
+.search { position:absolute; right:25px; top:12px; }
+
+#main { background:#fff; padding-bottom:20px; }
+
+#content, #sidebar { padding-top:25px; }
+#content > footer { overflow:hidden; margin-left:25px; }
+#content > footer a { color:#025159; }
+#content > footer a.older { float:left; }
+#content > footer a.newer { float:right; }
+
+.post, #comments, #addComment { position:relative; padding-left:160px; margin-left:25px; }
+.post h2 { border-bottom:1px dotted #181f24; margin-bottom:10px; }
+.post h2:hover { border-bottom:1px solid #181f24; }
+.post h4 { font-size:20px; }
+.post h2 a { font:32px/1 Georgia, serif; color:#181f24; text-decoration:none; }
+.post dl, #comments h3, #addComment h3 { position:absolute; left:0; background:#025159; padding:10px !important; width:auto; width:130px; }
+.post[data-type="art"] dl {  background:#8cbf2a; }
+.post[data-type="video"] dl {  background:#03a6a6; }
+.post[data-type="comic"] dl {  background:#a50376; }
+.post dt { font:14px/1 Georgia, serif; color:#fff; padding-bottom:5px; }
+.post dd, #comments h3, #addComment h3 { font:20px/1 Georgia, serif; color:#fff; text-transform:lowercase; padding-bottom:5px; }
+.post dd a { color:#fff; text-decoration:none; }
+.post dt.tags { padding-top:20px; }
+.post .body { border-bottom:1px dotted #181f24; margin-bottom:10px; }
+.post .body a { color:#025159; }
+.post .body blockquote { border-left:1px solid #025159; padding:0 10px; margin:10px; }
+.post .body a:hover { text-decoration:none; }
+.post img { max-width:100%; padding:5px; box-shadow:0 1px 5px #888; margin:10px auto; display:block; cursor:pointer; }
+.post p { margin:0 0 10px; line-height:1.4; font-size:16px; }
+.post footer { text-align:right; margin-bottom:20px; }
+.post footer a, #comments footer a { color:#025159; }
+.post footer a:hover, #comments footer a:hover { text-decoration:none; }
+.post .more { text-align:right; display:block; padding-bottom:10px; }
+
+.imageTease { padding:5px; box-shadow:0 1px 5px #888; }
+.imageTease a { position:relative; overflow:hidden; height:150px; display:block; }
+.imageTease img { max-width:100%; padding:0; border:0; margin:0; }
+
+#comments article { overflow:hidden; }
+#comments header { border-bottom:1px dotted #181f24; padding-bottom:2px; margin-bottom:5px; }
+#comments img { max-width:48px; max-height:48px; float:left; padding-right:10px; }
+#comments footer { clear:both; font-size:12px; text-align:right; padding:5px 0; }
+#comments time { color:#666; padding-right:15px; }
+#comments .children { padding-left:15px; }
+
+/* Comment form */
+#commentForm label { width:200px; font:14px 'Trebuchet MS', sans-serif; display:block; }
+#commentForm input { width:250px; font:14px 'Trebuchet MS', sans-serif; margin:0 0 10px; }
+#commentForm button { display:block; height:40px; width:120px; }
+#commentForm textarea { width:500px; height:150px; margin:0 0 10px; }
+#commentForm .left { float:left; width:60px; }
+#commentForm .avatar { width:56px; height:56px; padding:1px; box-shadow:0 1px 5px #888; display:block; margin:0 0 5px; }
+#commentForm .left a { display:block; padding:0 0 5px; }
+label.error { color:#f00; }
+
+.post .gallery { overflow:hidden; background:#8cbf2a; padding:10px; }
+.post .gallery span { color:#fff; font-size:14px; font-weight:bold; }
+.post .gallery ul { padding-top:10px; }
+.post .gallery li { float:left; padding:0 5px; }
+.post .gallery img { border:0; padding:0; margin:0; }
+
+aside { padding:10px; position:relative; margin:0 15px 25px 0; }
+aside h3 { font-size:24px; color:#fff; margin-bottom:10px; }
+
+aside.twitter { background:#03a6a6 url(images/twitter.png) no-repeat left bottom; padding-bottom:42px; font-size:18px; color:#fff; }
+aside.twitter a { color:#fff; }
+aside.twitter h3 { position:absolute; top:-9999px; left:-9999px; }
+aside.twitter time { text-align:right; font-size:14px; display:block; }
+aside.twitter p { line-height:1.2; font-size:18px; }
+aside.twitter .follow { position:absolute; right:10px; bottom:10px; text-decoration:none; }
+
+.popArt { background:#8cbf2a; }
+.popArt ul { overflow:hidden; width:auto; margin:0 auto; list-style:none; }
+.popArt li { float:left; margin:0 3% 10px 0; width:48.5%; }
+.popArt .last { margin-right:0; }
+.popArt img { max-width:100%; }
+.popArt .more { display:block; color:#fff; text-align:right; font-size:18px; text-decoration:none; text-transform:lowercase; }
+
+.popBlog { background:#025159; color:#fff; font-size:18px; }
+.popBlog ol { margin-left:25px; }
+.popBlog li { padding-bottom:10px; }
+.popBlog a { color:#c1e5e9; text-decoration:none; }
+
+#content_archives { background:#a50376; }
+#content_archives li { padding-bottom:5px; }
+#content_archives a { color:#fff; text-decoration:none; background:url(images/archive_bullet.png) no-repeat left center; padding-left:13px; }
+#content_archives a:hover { color:#e4b4d6; }
+#content_archives a:visited { color:#e4b4d6; }
+
+#gallery.art { margin-left:10px; text-align:center; }
+#gallery.art a { text-decoration:none; }
+#gallery.art a h3 { max-width:100%; overflow:hidden; display:block; font:bold 14px Georgia, serif; color:#025159; padding:5px 0 0; }
+#gallery.art img { max-height:200px; max-width:none; }
+#gallery.art a p { position:absolute; bottom:10px; left:10px; font:14px Georgia, serif; background:#1a1e26; color:#fff; padding:4px; max-width:150px; }
+#gallery.art a:hover p { background:#f26716; }
+#gallery.art { width:980px; margin:0 auto; position:relative; }
+#gallery.art.loading .artwork { position:static; float:left; }
+#gallery.art .artwork { box-shadow:0 1px 5px #888; width:205px; margin:0 0 10px 10px; border:1px solid #ccc; padding:10px; position:absolute; }
+#gallery.art .artwork:hover { cursor:pointer; box-shadow:1px 1px 3px #ccc; }
+#gallery.art .artwork img { max-width:100%; display:block; margin:0 auto; }
+#gallery.art .artwork time { position:absolute; bottom:10px; right:10px; color:#666; font:10px/1 sans-serif; }
+#gallery.art .spacer { border:1px solid #ccc; background:#eee; position:absolute; margin:0 0 10px 10px; width:225px; }
+
+
+.artbox { position:absolute; box-shadow:none; padding:5px; background:#fff; z-index:200; font-family:Georgia, serif; }
+.artbox.loading { background:rgba(255,255,255,0.5) url(/images/ajax-loader.gif) no-repeat center center; }
+.artbox.error { background:rgba(255,255,255,0.5) url(/images/error.png) no-repeat center center; }
+.artbox.loading img { display:none; }
+.artbox.displaying { box-shadow:0 1px 5px #888; position:fixed; }
+.artbox.displaying img { max-height:100%; max-width:100%; margin:auto; display:block; }
+.artbox article { position:absolute; left:0; right:0; bottom:0; background:rgba(0,0,0,0.75); color:#fff; margin:5px; padding:5px; }
+.artbox h2 { margin-bottom:10px; }
+.artbox p { margin-bottom:5px; }
+.artbox a { color:#c1e5e9; text-decoration:none; }
+.artbox .close { text-transform:lowercase; font-size:12px; position:absolute; top:10px; right:10px; }
+.artbox .close:hover { color:#c1e5e9; cursor:pointer; }
+.artboxBg { position:fixed; background:#000; z-index:200; left:0; top:0; right:0; bottom:0; opacity:0; }
+
+#gallery.portfolio { padding:0 20px; }
+#gallery.portfolio div { overflow:hidden; padding:10px 0; }
+#gallery.portfolio a { color:#025159; text-decoration:none; }
+#gallery.portfolio img { padding:5px; box-shadow:0 1px 5px #888; float:left; display:inline-block; margin:0 10px 0 2px; }
+#gallery.portfolio p { margin-bottom:5px; }
+
+#galleryBg { display:none; background:url(images/lightbox_bg.png); position:fixed; left:0; top:0; width:100%; height:100%; text-align:center; }
+div#galleryItem { height:625px; width:0; margin:0 auto; background:#fff; position:relative; }
+#galleryItem .close { position:absolute; right:0; bottom:0; padding:5px 25px; background:#1a1e26; font:bold 14px 'Trebuchet MS', sans-serif; text-decoration:none; color:#fff; text-transform:uppercase; }
+#galleryItem .close:hover { background:#f26716; }
+#galleryItem iframe { width:800px; height:600px; }
+
+#comic { padding:0 10px; }
+#comic img { padding:5px; box-shadow:0 1px 5px #888; display:block; margin:0 10px 0 2px; max-width:100%; margin:0 auto; }
+#comic h2 { border-bottom:1px dotted #181f24; margin-bottom:10px; }
+#comic .comic_nav { text-align:center; height:20px; margin:10px 0; position:relative; }
+#comic .comic_nav a { color:#025159; text-decoration:none; font:16px/1 Georgia, serif; position:absolute; }
+#comic .first { left:0; }
+#comic .prev { left:65px; }
+#comic .next { right:75px; }
+#comic .last { right:0; }
+
+@media screen and (max-width:1024px) {
+	h1 { font-size:20px; }
+	nav ul { width:415px; }
+	nav a { font-size:20px; }
+}
+
+@media screen and (max-width:767px) {
+	header .search { display:none; }
+	nav ul { margin:0 0 0 auto; }
+	.post { padding-left:0; }
+	.post dl { position:static; width:100%; background:#fff; padding:0; }
+	.post dl:after { content:'.'; display:block; height:0; clear:both; visibility:hidden; }
+	.post dd, .post dt { float:left; color:#000; font-size:14px; padding-bottom:0; }
+	.post dt.tags { padding-top:0; }
+	.post dt { font-weight:bold; padding-left:15px; }
+	.post dt:first-child { padding-left:0; }
+	.post dd { padding-left:5px; }
+}
+
+@media screen and (max-width:600px) {
+	h1 { position:static; padding:15px; }
+	nav a { font-size:14px; }
+	nav ul { margin:0; }
+	#gallery div { display:block; max-width:100%; }
+}

@@ -1,0 +1,36 @@
+.form { overflow:hidden; padding:10px; }
+.form .field { padding:10px 0; overflow:hidden; }
+.form .subField { float:left; margin-right:15px; }
+.form label { display:block; font:bold 14px sans-serif; padding-bottom:5px; }
+.form input[type="text"], .form select, .form input[type="password"] { padding:2px; width:300px; }
+.form .number input[type="text"] { width:100px; }
+.form input[type="checkbox"], .form input[type="radio"] { float:left; margin:3px 5px 0 0; display:block; }
+.form input[maxlength="2"] { width:20px; }
+.form li label { font-weight:normal; }
+.form h3 { font:bold 24px/1 sans-serif; }
+.form button, .form input[type="submit"], .form input[type="button"] { width:150px; height:35px; }
+.form .error { background:#fcc; }
+.form span { color:#f00; }
+.form .focus { background:#ffc; }
+.form textarea { width:431px; height:300px; }
+.form .date { background:url(/GNM/common/images/calendar.png) no-repeat right center; cursor:pointer; border:1px solid #ccc; width:150px !important; }
+.form .current { margin-top:10px; }
+.form .current p { margin-bottom:5px; }
+
+.login { width:300px; margin:0 auto; background:#eee; border-radius:2px; box-shadow:0 1px 5px #888; padding:20px; }
+.login label, .login h2 { text-align:center; font-family:sans-serif; padding-bottom:5px; }
+.login button, .login input { margin:0 auto; display:block; }
+
+.adminNav { background:#eee; font:14px sans-serif; padding:10px 0; overflow:hidden; }
+.adminNav li { display:inline; padding:0 10px; }
+.adminNav li.user { float:right; }
+.adminNav li a { color:#000; font-weight:bold; text-decoration:none; }
+
+.overview { background:#eee; border-radius:5px; margin:0 10px; font-family:sans-serif; padding:1px; position:relative; }
+.overview h2 { padding:8px; font-size:24px; }
+.overview table { background:#fff; border-radius:5px; border-collapse:collapse; width:100%; }
+.overview td { vertical-align:top; padding:5px; }
+.overview th { background:#ccc; padding:5px; }
+.overview tr:nth-child(even) { background:#eee; }
+.overview td.date { width:16%; text-align:right; }
+.overview .poster, .overview .parent { text-align:center; }
