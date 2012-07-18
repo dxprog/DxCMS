@@ -125,8 +125,8 @@ namespace Lib {
 		/**
 		 * Gets the requested item off the query string if it exists
 		 */
-		public static function Get($param) {
-			return isset($_GET[$param]) ? $_GET[$param] : null;
+		public static function Get($param, $default = false) {
+			return isset($_GET[$param]) ? $_GET[$param] : $default;
 		}
 		
 		/**
