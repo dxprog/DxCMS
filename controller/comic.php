@@ -2,6 +2,7 @@
 
 namespace Controller {
 	
+	use Api;
 	use Lib;
 	
 	class Comic implements Page {
@@ -11,11 +12,11 @@ namespace Controller {
 			Lib\Display::setTemplate('comic');
 			
 			$perma = isset($_GET['perma']) ? $_GET['perma'] : '';
-			$comic = Lib\Dx::call('comic', 'getComic', array('perma'=>$perma, 'contentType'=>'comic'));
-			if (null != $comic && $comic->status->ret_code == 0 && null != $comic->body) {
-				$comic->body->date = date('F j, Y', $comic->body->date);
-				Lib\Display::setVariable('title', $comic->body->title);
-				$comic = Lib\Display::compile($comic->body, 'comic');
+			$comic = Api\Comic::getComic(array( 'perma'=>$perma ));
+			if (null != $comic) {
+				Api\Content::logContentView(array( 'id'=>$comic->id ));
+				Lib\Display::setVariable('title', $comic->title);
+				$comic = Lib\Display::compile($comic, 'comic');
 				Lib\Display::setVariable('content', $comic);
 			} else {
 				Lib\Display::showError($comic->status->ret_code, 'Something went boom!');
