@@ -33,7 +33,8 @@ namespace Controller {
 					}
 					$data->text = preg_replace('@http://([.\S]+)@is', '<a href="http://$1" target="_blank">http://$1</a>', $data->text);
 					$data->text = preg_replace('/@([.\S]+)/is', '@<a href="http://twitter.com/$1" title="Visit $1\'s twitter page" target="_blank">$1</a>', $data->text);
-					$data->created_at = self::_makeTwitterRelativeTime(strtotime($data->created_at));
+					$data->created_at = strtotime($data->created_at);
+					$data->created_at_relative = self::_makeTwitterRelativeTime($data->created_at);
 					$retVal = Lib\Display::compile($data, 'sidebar_twitter', $cacheKey);
 				}
 			}
