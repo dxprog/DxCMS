@@ -48,7 +48,9 @@ namespace Lib {
 			try {
 				$comm = self::$_conn->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
 				$comm->execute($params);
-				switch (strtolower(substr($sql, 0, 6))) {
+				
+				switch (strtolower(current(explode(' ', $sql)))) {
+					case 'call':
 					case 'select':
 						$retVal = new stdClass();
 						$retVal->count = $comm->rowCount();
@@ -63,10 +65,12 @@ namespace Lib {
 						break;
 				}
 				
-			} catch (PDOException $e) {
+				self::$lastError = self::$_conn->errorInfo();
+				
+			} catch (Exception $e) {
 				self::$lastError = $e->Message();
+				throw $e;
 			}
-			
 			
 			return $retVal;
 		}
