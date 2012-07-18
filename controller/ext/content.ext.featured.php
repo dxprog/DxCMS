@@ -2,6 +2,7 @@
 
 namespace Controller {
 
+	use Api;
 	use Lib;
 	use stdClass;
 
@@ -24,8 +25,8 @@ namespace Controller {
 			if (false === $retVal) {
 				$t = new stdClass();
 				$t->featured = true;
-				$obj = Lib\Dx::call('content', 'getContent', array('meta'=>$t, 'select'=>'title,perma,meta', 'max'=>4));
-				$retVal = Lib\Display::compile($obj->body, 'content_featured', $cacheKey);
+				$obj = Api\Content::getContent(array( 'meta'=>$t, 'select'=>'title,perma,meta', 'max'=>4 ));
+				$retVal = Lib\Display::compile($obj, 'content_featured', $cacheKey);
 			}
 			
 			return $retVal;
