@@ -9,7 +9,7 @@ namespace Controller {
 	class Code implements Extension {
 		
 		private static $_ECMAkeywords = '#[\w]+|var|static|private|public|new|using|import|class|namespace|void|function|int|char|float|double|if|else|elseif|for|foreach|each|try|catch|do|while|switch|return|break|goto|continue';
-		private static $_phpFunctions = 'include|include_once|require|require_once|exit|fgets|fsockopen|fopen|fputs|fwrite|fread|echo|strtolower|strtoupper|define|print|die';
+		private static $_phpFunctions = 'print_r|include|include_once|require|require_once|exit|fgets|fsockopen|fopen|fputs|fwrite|fread|echo|strtolower|strtoupper|define|print|die';
 		
 		public static function init() {
 			Content::registerExtension('Code', 'formatPostCode', 'formatter');
@@ -27,7 +27,7 @@ namespace Controller {
 					$lang = strtolower ($matches[1][$i]);
 					
 					// Remove all paragraph tags from the code bits
-					$code = str_replace (array ("<p>", "</p>", "\n\n"), "\n", $code);
+					$code = str_replace (array ('<p>', '</p>', "\n\n"), "\n", $code);
 					
 					// Do syntax highlighting
 					$code = self::_highlightSyntax ($code, $lang);
@@ -42,7 +42,7 @@ namespace Controller {
 						$n .= '<li>' . $t[$j] . '</li>';
 					}
 					if ($lang == 'php') {
-						$n = '<li>&lt;?php</li>' . $n . '<li>?&gt;</li>';
+						$n = '<li><span class="D">&#60;?php</span></li><li></li>' . $n . '<li><span class="D">?&#62;</span></li>';
 					}
 					
 					$post->body = str_replace ($matches[0][$i], '<div class="code"><span>Code: ' . $lang . '</span><ol>' . $n . '</ol></div>', $post->body);
@@ -63,6 +63,7 @@ namespace Controller {
 					$keywords = self::$_phpFunctions . '|';
 				case 'actionscript':
 				case 'javascript':
+				case 'json':
 				case 'c#':
 				case 'c':
 				case 'c++':
