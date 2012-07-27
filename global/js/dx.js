@@ -23,13 +23,13 @@ dx.flash = function(options) {
 
 	var
 	ratio = options.height / options.width,
-	maxWidth = $('.gallerySingle').width();
+	maxWidth = $('.flashBox').width();
 	if (options.width > maxWidth) {
 		options.width = maxWidth;
 		options.height = Math.round(maxWidth * ratio);
 	}
 
-	$('.gallerySingle').flash(options);
+	$('.flashBox').flash(options);
 
 };
 
@@ -434,13 +434,6 @@ dx.poll = function(id) {
 	$(init);
 	
 }(jQuery));
-
-/* Lightbox for blog image galleries */
-$(function() {
-	if ($('.gallery a').length > 0) {
-		$('.gallery a').lightBox();
-	}
-});
 
 /* AND A MERRY CHRISTMAS! 
 $(function() {
