@@ -10,9 +10,16 @@ namespace Controller {
 		public static function render() {
 			
 			Lib\Display::setTemplate('comic');
+			$perma = Lib\Url::Get('perma');
 			
-			$perma = isset($_GET['perma']) ? $_GET['perma'] : '';
-			$comic = Api\Comic::getComic(array( 'perma'=>$perma ));
+			// Grab from cache
+			$cacheKey = 'Comic_' . $perma;
+			$comic = Lib\Cache::Get($cacheKey);
+			if (false === $comic) {
+				$comic = Api\Comic::getComic(array( 'perma'=>$perma ));
+			}
+			
+			// Render
 			if (null != $comic) {
 				Api\Content::logContentView(array( 'id'=>$comic->id ));
 				Lib\Display::setVariable('title', $comic->title);
