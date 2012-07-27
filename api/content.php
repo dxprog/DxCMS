@@ -392,9 +392,11 @@ namespace Api {
 			$where = '';
 			
 			// Check for a content type filter
+			$contentType = null;
 			if (isset($vars['contentType'])) {
 				$where = ' AND content_type=:type ';
 				$params[':type'] = $vars['contentType'];
+				$contentType = $vars['contentType'];
 			}
 			
 			// If no valid timestamp was passed, we'll default to one week
@@ -410,7 +412,7 @@ namespace Api {
 			}
 			
 			// Get the most viewed posts within the time frame
-			$params[':commentWeight'] = self::_getAvgHitsPerComment();
+			$params[':commentWeight'] = self::_getAvgHitsPerComment($contentType, $vars['mindate']);
 			$result = Lib\Db::Query('SELECT COUNT(DISTINCT h.hit_ip) + (SELECT COUNT(1) * :commentWeight FROM content WHERE content_parent=c.content_id AND content_date >= :minDate) AS total, c.content_id, c.content_title, c.content_perma, c.content_meta FROM hits h INNER JOIN content c ON c.content_id=h.content_id WHERE h.hit_date >= :minDate' . $where . ' GROUP BY h.content_id ORDER BY total DESC, c.content_date DESC LIMIT ' . $vars['max'], $params);
 			
 			while ($row = Lib\Db::Fetch($result)) {
@@ -625,8 +627,6 @@ namespace Api {
 			
 			if (is_numeric($obj->id) && count($obj->tags) > 0) {
 				
-				
-				
 				// Delete old tags first
 				Lib\Db::Query('DELETE FROM tags WHERE content_id=' . $obj->id);
 				
@@ -653,9 +653,19 @@ namespace Api {
 		/**
 		 * Returns the average amount of hits a content item has per comment
 		 */
-		private static function _getAvgHitsPerComment() {
-			$avgHits = (double)Lib\Db::Fetch(Lib\Db::Query('SELECT AVG(hits.count) AS avg_hits FROM (SELECT COUNT(1) AS count FROM hits GROUP BY content_id) AS hits'))->avg_hits;
-			$avgComments = (double)Lib\Db::Fetch(Lib\Db::Query('SELECT AVG(comments.count) AS avg_comments FROM (SELECT (SELECT COUNT(1) FROM content WHERE content_type="cmmnt" AND content_parent=c.content_id) AS count FROM content c) AS comments'))->avg_comments;
+		private static function _getAvgHitsPerComment($contentType = null, $minDate = null) {
+			$params = array( ':minDate' => $minDate );
+			if (null == $contentType) {
+				$avgHits = (double)Lib\Db::Fetch(Lib\Db::Query('SELECT AVG(hits.count) AS avg_hits FROM (SELECT COUNT(1) AS count FROM hits WHERE hit_date >= :minDate GROUP BY content_id) AS hits', $params))->avg_hits;
+				$avgComments = (double)Lib\Db::Fetch(Lib\Db::Query('SELECT AVG(comments.count) AS avg_comments FROM (SELECT (SELECT COUNT(1) FROM content WHERE content_type="cmmnt" AND content_parent=c.content_id AND content_date >= :minDate) AS count FROM content c) AS comments', $params))->avg_comments;
+			} else {
+				$params[':type'] = $contentType;
+				$avgHits = (double)Lib\Db::Fetch(Lib\Db::Query('SELECT AVG(hits.count) AS avg_hits FROM (SELECT COUNT(1) AS count FROM hits h INNER JOIN content c ON c.content_id = h.content_id WHERE c.content_type = :type AND h.hit_date >= :minDate GROUP BY h.content_id) AS hits', $params))->avg_hits;
+				$avgComments = (double)Lib\Db::Fetch(Lib\Db::Query('SELECT AVG(comments.count) AS avg_comments FROM (SELECT (SELECT COUNT(1) FROM content x INNER JOIN content p ON p.content_id = x.content_parent WHERE x.content_type="cmmnt" AND x.content_parent=c.content_id AND p.content_type = :type AND x.content_date >= :minDate) AS count FROM content c) AS comments', $params))->avg_comments;				
+			}
+			
+			$avgComments = $avgComments != 0 ? $avgComment : 1;
+
 			return floor($avgHits / $avgComments);
 		}
 		
