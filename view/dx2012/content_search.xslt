@@ -13,15 +13,15 @@
 				<p class="searchStats">Sorry, your search for <strong>"<xsl:value-of select="//query" />"</strong> returned no results.</p>
 			</xsl:otherwise>
 		</xsl:choose>
-		<footer>
+		<footer class="searchPaging">
 			<xsl:choose>
 				<xsl:when test="content_search/prev">
-					<a href="{content_search/prev}" class="older">Back</a>
+					<a href="{content_search/prev}" class="older"><xsl:text disable-output-escaping="yes">&amp;laquo; </xsl:text>Back</a>
 				</xsl:when>
 			</xsl:choose>
 			<xsl:choose>
 				<xsl:when test="content_search/next">
-					<a href="{content_search/next}" class="newer">Next</a>
+					<a href="{content_search/next}" class="newer">Next<xsl:text disable-output-escaping="yes"> &amp;raquo;</xsl:text></a>
 				</xsl:when>
 			</xsl:choose>
 		</footer>
@@ -39,11 +39,11 @@
 					</xsl:otherwise>
 				</xsl:choose>
 			</h3>
-			<h4>Posted on <em><xsl:value-of select="date" /></em></h4>
-			<p><xsl:value-of select="body" /></p>
 			<xsl:if test="type = 'art' or type = 'portfolio' or type = 'video'">
 				<img src="{meta/thumb}" alt="{title}" />
 			</xsl:if>
+			<h4>Posted on <em><xsl:value-of select="date" /></em></h4>
+			<p><xsl:value-of select="body" /></p>
 		</li>
 	</xsl:template>
 	

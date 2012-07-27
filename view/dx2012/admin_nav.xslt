@@ -8,6 +8,8 @@
 			<li><a href="/admin/art/overview/">Art</a></li>
 			<li><a href="/admin/code/overview/">Code</a></li>
 			<li><a href="/admin/comic/overview/">Comics</a></li>
+			<li><a href="/admin/code/overview/">Code</a></li>
+			<li><a href="/admin/qa/overview/">Questions</a></li>
 			<li><a href="/admin/kvps/overview/">Site Options</a></li>
 			<li class="user">Logged in as <strong><xsl:value-of select="//user" /></strong> ( <a href="/admin/logout/">Logout</a> )</li>
 		</ul>

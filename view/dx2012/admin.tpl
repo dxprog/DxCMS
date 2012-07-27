@@ -4,7 +4,7 @@
 		<title>matt hackamnn - web developer</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<meta name="viewport" content="initial-scale=1.0, width=device-width, height=device-height, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-		<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
+		<script type="text/javascript" src="/global/js/jquery.lib.js"></script>
 		<script type="text/javascript" src="/global/js/dx.js"></script>
 		<script type="text/javascript" src="/global/js/jquery-ui-1.8.7.custom.min.js"></script>
 		<link rel="stylesheet" type="text/css" href="/view/dx2012/1140.css" />

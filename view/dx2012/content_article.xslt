@@ -55,10 +55,32 @@
 						</div>
 					</xsl:when>
 					<xsl:when test="type = 'comic'">
-						<div class="imageTease artwork" data-id="{id}">
+						<div class="imageTease" data-id="{id}">
 							<a href="{$link}" title="{title}">
 								<img src="http://cmimg.dxprog.com/{image}" />
 							</a>
+						</div>
+					</xsl:when>
+					<xsl:when test="type = 'portfolio' or type = 'art'">
+						<div class="flashBox">
+							<xsl:choose>
+								<xsl:when test="meta/fileType = 'swf'">
+									<script type="text/javascript">
+										$(function(){dx.flash({swf:'<xsl:value-of select="meta/file" />', width:<xsl:value-of select="meta/width" />, height:<xsl:value-of select="meta/height" />})});
+									</script>
+								</xsl:when>
+								<xsl:when test="meta/fileType = 'flv' or meta/fileType = 'mp4'">
+									<script type="text/javascript">
+										$('.flashBox').video('<xsl:value-of select="meta/file" />');
+									</script>
+								</xsl:when>
+								<xsl:otherwise>
+									<a href="{meta/file}" target="_blank" class="enlarge">
+										<img src="{meta/file}" alt="{title}" />
+										<span>View Full Size</span>
+									</a>
+								</xsl:otherwise>
+							</xsl:choose>
 						</div>
 					</xsl:when>
 				</xsl:choose>
@@ -66,9 +88,6 @@
 				<xsl:choose>
 					<xsl:when test="postBreak">
 						<a href="/entry/{perma}#break" title="Continue Reading {title}" class="more">Read More</a>
-					</xsl:when>
-					<xsl:when test="type = 'art' or type = 'video'">
-						<a href="/entry/{perma}/" title="View Full Image" class="more">View Full</a>
 					</xsl:when>
 				</xsl:choose>
 			</div>

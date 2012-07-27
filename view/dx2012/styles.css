@@ -12,7 +12,7 @@ nav ul:after { content:'.'; display:block; height:0; clear:both; visibility:hidd
 nav li { float:left; padding:12px 10px; position:relative; }
 nav li.selected { background:#025159; }
 nav li.selected:after { content:'.'; position:absolute; display:block; width:100%; background:url(images/nav_caret.png) no-repeat center bottom; left:0px; bottom:-9px; height:0; padding:9px 0 0; overflow:hidden; }
-.search { position:absolute; right:25px; top:12px; }
+header .search { position:absolute; right:25px; top:12px; }
 
 #main { background:#fff; padding-bottom:20px; }
 
@@ -37,8 +37,8 @@ nav li.selected:after { content:'.'; position:absolute; display:block; width:100
 .post dt.tags { padding-top:20px; }
 .post .body { border-bottom:1px dotted #181f24; margin-bottom:10px; }
 .post .body a { color:#025159; }
-.post .body blockquote { border-left:1px solid #025159; padding:0 10px; margin:10px; }
 .post .body a:hover { text-decoration:none; }
+.post .body blockquote { border-left:1px solid #025159; padding:0 10px; margin:10px; }
 .post img { max-width:100%; padding:5px; box-shadow:0 1px 5px #888; margin:10px auto; display:block; cursor:pointer; }
 .post p { margin:0 0 10px; line-height:1.4; font-size:16px; }
 .post footer { text-align:right; margin-bottom:20px; }
@@ -100,6 +100,8 @@ aside.twitter .follow { position:absolute; right:10px; bottom:10px; text-decorat
 #content_archives a { color:#fff; text-decoration:none; background:url(images/archive_bullet.png) no-repeat left center; padding-left:13px; }
 #content_archives a:hover { color:#e4b4d6; }
 #content_archives a:visited { color:#e4b4d6; }
+#content_archives .months { padding:5px 0 0 15px; }
+#content_archives .months a { background:none; }
 
 #gallery.art { margin-left:10px; text-align:center; }
 #gallery.art a { text-decoration:none; }
@@ -151,6 +153,47 @@ div#galleryItem { height:625px; width:0; margin:0 auto; background:#fff; positio
 #comic .prev { left:65px; }
 #comic .next { right:75px; }
 #comic .last { right:0; }
+
+#contact { background:#a50376; color:#fff; }
+#contact a:hover { color:#e4b4d6; }
+#contact a:visited { color:#e4b4d6; }
+#contact p { margin-top:5px; }
+#contact ul { margin:10px 0; }
+#contact ul li a { display:block; width:120px; color:#fff; text-decoration:none; font:14px Georgia, serif; height:25px; padding:7px 0px 0px 40px; margin:5px; background:url(images/social.png) no-repeat; overflow:hidden; }
+#contact ul li a.email { background-position: 0px 0px; }
+#contact ul li a.none { background: none; }
+#contact ul li a.reddit { background-position: 0px -32px; }
+#contact ul li a.facebook { background-position: 0px -64px; }
+#contact ul li a.flickr { background-position: 0px -96px; }
+#contact ul li a.lastfm { background-position: 0px -128px; }
+#contact ul li a.linkedin { background-position: 0px -160px; }
+#contact ul li a.twitter { background-position: 0px -192px; }
+#contact ul li a.youtube { background-position: 0px -224px; }
+#contact ul li a.deviantart { background-position: 0px -256px; }
+
+.information, .questions { margin-left:25px; overflow:none; }
+.information img { float:left; width:250px; padding-right:10px; }
+.information p, .questions p { margin:0 0 10px; line-height:1.4; font-size:16px; }
+.questions time { text-align:right; font-size:12px; color:#666; display:block; }
+.questions textarea { width:100%; height:150px; }
+.questions button { display:block; width:100%; height:45px; }
+.questions .form { margin:10px 0; }
+.questions article { margin:10px 0; }
+.questions a { color:#025159; }
+.questions a:hover { text-decoration:none; }
+
+ol.search, .searchStats { margin-left:45px; padding-bottom:10px; }
+ol.search li { padding:0 0 10px; clear:both; }
+ol.search a { color:#025159; }
+ol.search h3 { padding-bottom:5px; }
+ol.search a:hover { text-decoration:none; }
+ol.search img { float:left; height:100px; box-shadow:0 1px 5px #888; margin:0 10px 10px 0; display:block; }
+.searchPaging { clear:both; }
+.searchPaging a:hover { text-decoration:none; }
+
+#error { width:600px; margin:0 auto; }
+#error img { float:left; padding:0 15px 0 0; }
+#error h2 { text-transform:uppercase; font:bold 36px 'Trebuchet MS', sans-serif; padding:60px 0 0; }
 
 @media screen and (max-width:1024px) {
 	h1 { font-size:20px; }

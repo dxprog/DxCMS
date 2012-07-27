@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<title>matt hackamnn - web developer</title>
-		<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
+		<script type="text/javascript" src="/global/js/jquery.lib.js"></script>
 		<script type="text/javascript" src="/global/js/dx.js"></script>
 		<link rel="stylesheet" type="text/css" href="/view/dx2012/1140.css" />
 		<link rel="stylesheet" type="text/css" href="/view/dx2012/styles.css" />

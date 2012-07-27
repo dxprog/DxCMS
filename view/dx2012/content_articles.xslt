@@ -66,7 +66,7 @@
 						</div>
 					</xsl:when>
 					<xsl:when test="type = 'comic'">
-						<div class="imageTease artwork" data-id="{id}">
+						<div class="imageTease" data-id="{id}">
 							<a href="{$link}" title="{title}">
 								<img src="http://cmimg.dxprog.com/{image}" />
 							</a>

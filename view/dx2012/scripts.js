@@ -1,20 +1,18 @@
-(function($) {
+(function() {
 
-	var
+	var artbox = function(el, opts) {
 	
-	$body = $('body'),
-	$window = $(window),
-	
-	fadeRemove = function() {
-		$(this).remove();
-	},
-	
-	lightbox = (function() {
-		
 		var
 		
+		$this = el,
+		$body = $('body'),
+		$window = $(window),
 		$lightbox = null,
 		$bg = null,
+		
+		fadeRemove = function() {
+			$(this).remove();
+		},
 		
 		closeArtbox = function(e) {
 			$lightbox.fadeOut(400, fadeRemove);
@@ -37,10 +35,10 @@
 				},
 				body:this.getAttribute('title')
 			};
-			ajaxCallback(data);
+			displayArtbox(data);
 		},
 		
-		ajaxCallback = function(data) {
+		displayArtbox = function(data) {
 			
 			// Data validation
 			if (data) {
@@ -57,7 +55,7 @@
 				x = 0,
 				y = 0;
 				
-				$bg = $('<div class="artboxBg" >')
+				$bg = $('<div class="artboxBg"></div>')
 					.insertBefore($lightbox)
 					.fadeTo(400, 0.5)
 					.on('click', closeArtbox);
@@ -118,16 +116,13 @@
 			
 		},
 		
-		click = function(e) {
-			
+		urlCallback = function(e) {
+			// If this is an image and it's wrapped in an anchor, we'll pull data off of that instead
 			var
 			$this = $(e.currentTarget),
-			position = $this.offset(),
 			href = e.currentTarget.tagName !== 'IMG' ? $this.find('a').attr('href') : e.currentTarget.getAttribute('src'),
-			ext = href.split('.'),
-			loader = null;
+			ext = href.split('.');
 			
-			// If this is an image and it's wrapped in an anchor, we'll pull data off of that instead
 			if ($this.parent()[0].tagName === 'A') {
 				href = $this.parent().attr('href');
 				ext = href.split('.');
@@ -136,43 +131,71 @@
 				}
 			}
 			
+			return href;
+		},
+		
+		dataLoader = function(e) {
+			var loader = document.createElement('img');
+			loader.onload = imageLoaded;
+			loader.src = e.href;
+			loader.title = e.currentTarget.getAttribute('title');
+		},
+		
+		click = function(e) {
+			var
+			$target = $(e.currentTarget),
+			position = $target.offset(),
+			loader = null,
+			href = options.urlCallback(e),
+			transport = '';
+			
 			e.preventDefault();
-			$lightbox = $('<div class="artbox loading"></div>');
+			$lightbox = $('<div class="artbox loading">' + transport + '</div>');
 			
 			// Create a duplicate looking element to overlay the one just clicked. This will be come the lightbox later
-			$lightbox.css({ left:position.left + 'px', top:position.top + 'px', width:$this.width() + 'px', height:$this.height() });
+			$lightbox.css({ left:position.left + 'px', top:position.top + 'px', width:$target.width() + 'px', height:$target.height() });
 			$body.append($lightbox);
 			$lightbox = $('.artbox');
 			
-			// Get information about the full content entry
-			if (href.indexOf('/gallery/') === 0) {
-				console.log(e.currentTarget);
-				$.ajax({
-					url:href + '?target=json&id=' + e.currentTarget.getAttribute('data-id'),
-					dataType:'json',
-					success:ajaxCallback
-				});
-			} else {
-				loader = document.createElement('img');
-				loader.onload = imageLoaded;
-				loader.src = href;
-				loader.title = e.currentTarget.getAttribute('title');
-			}
+			e.href = href;
+			e.display = displayArtbox;
+			options.dataLoader(e);
 			
 			return false;
 		},
 		
+		// Default options
+		options = {
+			duration:400,
+			dataLoader:dataLoader,
+			urlCallback:urlCallback
+		},
+		
 		init = function() {
-			$body
-				.on('click', '.artwork', click)
-				.on('click', '.postImage', click)
-				.on('click', '.gallery img', click)
-				.on('click', '.post a[href$="jpg"],.post a[href$="png"],.post a[href$="gif"],.post a[href$="jpeg"]', function(e) { e.preventDefault(); return false; });
+			var index = 0;
+			if ($this.length > 0) {
+				options = $.extend(options, opts);
+				$this.on('click', click).each(function() {
+					this.setAttribute('data-index', index);
+					index++;
+				});
+			}
 		};
 		
-		return { init:init };
+		init();
 		
-	}()),
+	};
+	
+	$.fn.artbox = function(options) {
+		(new artbox(this, options));
+		return this;
+	};
+	
+}(jQuery));
+
+(function($) {
+
+	var
 	
 	gallery = (function() {
 			
@@ -243,8 +266,20 @@
 	},
 	
 	init = (function() {
-		lightbox.init();
-		posts();
+		// lightbox.init();
+		$('.gallery img,.postImage').artbox();
+		$('.artwork').artbox({
+			dataLoader:function(e) {
+				if (e.href.indexOf('/gallery/') === 0) {
+					$.ajax({
+						url:e.href + '?target=json&id=' + e.currentTarget.getAttribute('data-id'),
+						dataType:'json',
+						success:e.display
+					});
+				}
+			}
+		});
+		posts();		
 	}());
 
 }(jQuery));
