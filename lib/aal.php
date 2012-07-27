@@ -1,14 +1,14 @@
 <?php
 
+/**
+ * DX API Abstraction Layer
+ */
+
 namespace Lib {
 
 	use Api;
 	use Exception;
 	use Lib;
-
-	/**
-	 * DX API Abstraction Layer
-	 */
 
 	define('API_LOCATION', '_internal');
 
