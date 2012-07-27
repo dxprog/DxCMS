@@ -253,11 +253,7 @@ namespace Controller {
 			$page = '';
 			
 			// Get the page
-			if (isset($_GET['p']) && is_numeric ($_GET['p'])) {
-				$page = $_GET['p'];
-			} else {
-				$page = 1;
-			}
+			$page = Lib\Url::GetInt('p', 1);
 			
 			// Figure up tags
 			if (isset($_GET['tag']) && $_GET['tag']) {
@@ -266,10 +262,16 @@ namespace Controller {
 			}
 			
 			// Check the dates
-			if (isset($_GET['month']) && isset($_GET['year']) && is_numeric ($_GET['month']) && is_numeric ($_GET['year'])) {
-				$minDate = mktime (0, 0, 0, $_GET['month'], 1, $_GET['year']);
-				$maxDate = mktime (0, 0, 0, $_GET['month'] + 1, 1, $_GET['year']);
-				$title = "Blog - Posts from ".date("F Y", $minDate)." - $_title";
+			$year = Lib\Url::GetInt('year');
+			$month = Lib\Url::GetInt('month');
+			if ($month && $year) {
+				$minDate = mktime (0, 0, 0, $month, 1, $year);
+				$maxDate = mktime (0, 0, 0, $month + 1, 1, $year);
+				$title = 'Blog - Posts from ' . date('F Y', $minDate) . ' - ' . $_title;
+			} else if ($year) {
+				$minDate = mktime (0, 0, 0, 1, 1, $year);
+				$maxDate = mktime (0, 0, 0, 12, 31, $year);
+				$title = 'Blog - Posts from ' . $year . ' - ' . $_title;
 			}
 			
 			// If we're not on the home page, use the blog template
@@ -279,10 +281,7 @@ namespace Controller {
 				$homePage = false;
 			}
 			
-			$type = '';
-			if (isset($_GET['type'])) {
-				$type = $_GET['type'];
-			}
+			$type = Lib\Url::Get('type', 'blog,art,comic');
 			
 			// Generate the cache key
 			$cacheKey = 'BlogHome_' . $page . '_' . $minDate . '_' . $maxDate . '_' . $tag . '_' . $type;
@@ -292,18 +291,18 @@ namespace Controller {
 			
 				// Grab the fifteen latest posts
 				$retVal = new stdClass();
-				$obj = Lib\Dx::call('content', 'getContent', array('offset'=>($page - 1) * ENTRIES_PER_PAGE, 'tag'=>$tag, 'mindate'=>$minDate, 'maxdate'=>$maxDate, 'max'=>ENTRIES_PER_PAGE, 'parent'=>0, 'contentType'=>$type));
-				if (null != $obj && $obj->status->ret_code == 0 && isset($obj->body->content)) {
+				$obj = Api\Content::getContent(array( 'offset'=>($page - 1) * ENTRIES_PER_PAGE, 'tag'=>$tag, 'mindate'=>$minDate, 'maxdate'=>$maxDate, 'max'=>ENTRIES_PER_PAGE, 'parent'=>0, 'contentType'=>$type ));
+				if (isset($obj->content)) {
 					
 					// Format each entry
 					$arr = array();
 					
-					foreach ($obj->body->content as $post) {
+					foreach ($obj->content as $post) {
 						$arr[] = self::_formatPost ($post, true);
 					}
 				
 					// Figure up the paging buttons
-					$numPages = $obj->body->count / ENTRIES_PER_PAGE;
+					$numPages = $obj->count / ENTRIES_PER_PAGE;
 					$localDir = str_replace ('index.php', '', $_SERVER['SCRIPT_NAME']);
 					$rawPage = preg_replace ('@/page/(\d+)/@', '/', str_replace ($localDir, '/', $_SERVER['REQUEST_URI']));
 
@@ -319,7 +318,7 @@ namespace Controller {
 					$retVal = Lib\Display::compile($t, 'content_articles', $cacheKey);
 				
 				} else {
-					Lib\Display::showError($obj->status->ret_code, 'There was an error siplaying that page!');
+					Lib\Display::showError('Content returned empty or malformed', 'There was an error siplaying that page!');
 				}
 			}
 
@@ -354,10 +353,10 @@ namespace Controller {
 				$obj->firstResult = $page * SEARCH_RESULTS_PER_PAGE - SEARCH_RESULTS_PER_PAGE + 1;
 
 				if ($numPages > $page) {
-					$obj->next = '/search/' . $obj->query . '/page/'.($page + 1).'/';
+					$obj->next = '/search/?q=' . urlencode($obj->query) . '&p='.($page + 1);
 				}
 				if ($page > 1) {
-					$obj->prev = '/search/' . $obj->query . '/page/'.($page - 1).'/';
+					$obj->prev = '/search/?q=' . urlencode($obj->query) . '&p='.($page - 1);
 				}
 				
 				// Do formatting on the posts, strip out the HTML and truncate the body
