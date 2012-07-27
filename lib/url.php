@@ -132,8 +132,8 @@ namespace Lib {
 		/**
 		 * Gets an int value off the query string. If the value exists but is NaN, returns null
 		 */
-		public static function GetInt($param) {
-			return isset($_GET[$param]) && is_numeric($_GET[$param]) ? intVal($_GET[$param]) : null;
+		public static function GetInt($param, $default = 0) {
+			return isset($_GET[$param]) && is_numeric($_GET[$param]) ? intVal($_GET[$param]) : $default;
 		}
 
 	}
