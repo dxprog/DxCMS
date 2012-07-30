@@ -164,7 +164,6 @@ namespace Api {
 					break;
 				default:
 					$out = '<?xml version="1.0"?><response>' . self::_constructXML($exception->getCode(), $exception->getMessage()) . '</response>';
-					$out = '<?xml version="1.0"?><response>' . self::_constructXML($exception->getCode(), $exception->getMessage()) . '</response>';
 					$content = 'xml';
 					break;
 			}
@@ -289,8 +288,8 @@ namespace Api {
 				if ($signature) {
 					
 					// Get the user's secret from the database
-					db_Connect();
-					$row = db_Fetch(db_Query('SELECT api_secret FROM api_keys WHERE api_id="' . db_Escape($key) . '"'));
+					$params = array(':key' => $key);
+					$row = Lib\Db::Fetch(Lib\Db::Query('SELECT api_secret FROM api_keys WHERE api_id=:key', $params));
 					if ($row) {
 					
 						// Sort all the variables by key and create the signature key
@@ -309,7 +308,7 @@ namespace Api {
 							$retVal = true;
 						} else {
 							if ($raiseError) {
-								throw new Exception('Signature is invalid', INVALID_SIGNATUREY);
+								throw new Exception('Signature is invalid', INVALID_SIGNATURE);
 							}
 						}
 					
