@@ -2,9 +2,11 @@
 
 namespace Controller {
 
+	use Exception;
+	use stdClass;
+	
 	use Api;
 	use Lib;
-	use stdClass;
 
 	define('POST_CACHE', 600); // Length of time to cache posts
 	define('ENTRIES_PER_PAGE', 5);
@@ -200,6 +202,8 @@ namespace Controller {
 				$sync->body = $_POST['comment'];
 				$sync->type = 'cmmnt';
 				$sync->parent = $parent;
+				$sync->title = 'comment-' . $parent . '-' . time();
+				$sync->perma = 'comment-' . $parent . '-' . time();
 				$sync->meta->user_ip = $_SERVER['REMOTE_ADDR'];
 				if (isset($_POST['comment_parent']) && $_POST['comment_parent'] > 0) {
 					$sync->meta->comment_parent = intVal($_POST['comment_parent']);
@@ -223,6 +227,7 @@ namespace Controller {
 				// If all is good
 				if ($sync->body) {
 					$ret = Api\Content::syncContent(null, $sync);
+					var_dump($ret);
 					if (null !== $ret) {
 						// Clear the cache for this post
 						Lib\Dx::call('content', 'getContent', array('perma'=>$_GET['perma']), 0);
@@ -306,6 +311,7 @@ namespace Controller {
 					$localDir = str_replace ('index.php', '', $_SERVER['SCRIPT_NAME']);
 					$rawPage = preg_replace ('@/page/(\d+)/@', '/', str_replace ($localDir, '/', $_SERVER['REQUEST_URI']));
 
+					$t = new stdClass;
 					$t->contentType = $type ? '/' . $type . '/' : '/';
 					if ($numPages > $page) {
 						$t->prev = $_baseURI . '?p='.($page + 1);
