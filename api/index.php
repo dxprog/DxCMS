@@ -46,7 +46,7 @@ foreach ($_GET as $key=>$val) {
 }
 
 $_ret = Lib\Cache::Get($cacheKey);
-if (isset($vars['key']) && isset($vars['signature']) && Lib\DxApi::checkSignature($vars)) {
+if (isset($vars['key']) && isset($vars['signature']) && \Api\DxApi::checkSignature($vars)) {
 	$_ret = false;
 }
 
