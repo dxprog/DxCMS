@@ -3,7 +3,7 @@
 	<xsl:output method="html" />
 	<xsl:template match="/">
 		<div class="information">
-			<img src="/themes/dx2010/images/me_2010.jpg" alt="It's-a Me" />
+			<img src="/view/dx2010/images/me_2010.jpg" alt="It's-a Me" />
 			<header>
 				<h2>About Me</h2>
 			</header>

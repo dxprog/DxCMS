@@ -13,6 +13,8 @@ nav li { float:left; padding:12px 10px; position:relative; }
 nav li.selected { background:#025159; }
 nav li.selected:after { content:'.'; position:absolute; display:block; width:100%; background:url(images/nav_caret.png) no-repeat center bottom; left:0px; bottom:-9px; height:0; padding:9px 0 0; overflow:hidden; }
 header .search { position:absolute; right:25px; top:12px; }
+header .search input { position:relative; top:-6px; }
+header .search button { width:24px; height:0; padding:24px 0 0; overflow:hidden; background:url(images/search.png) no-repeat; border:0; }
 
 #main { background:#fff; padding-bottom:20px; }
 
@@ -197,7 +199,7 @@ ol.search img { float:left; height:100px; box-shadow:0 1px 5px #888; margin:0 10
 
 @media screen and (max-width:1024px) {
 	h1 { font-size:20px; }
-	nav ul { width:415px; }
+	nav ul { width:445px; }
 	nav a { font-size:20px; }
 }
 

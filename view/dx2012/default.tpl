@@ -4,10 +4,10 @@
 		<title>matt hackamnn - web developer</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<meta name="viewport" content="initial-scale=1.0, width=device-width, height=device-height, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-		<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
-		<script type="text/javascript" src="/global/js/dx.js"></script>
+		<script type="text/javascript" src="/global/js/jquery.lib.js"></script>
+		<script type="text/javascript" src="/global/js/dx.js?{JS_DATE}"></script>
 		<link rel="stylesheet" type="text/css" href="/view/dx2012/1140.css" />
-		<link rel="stylesheet" type="text/css" href="/view/dx2012/styles.css" />
+		<link rel="stylesheet" type="text/css" href="/view/dx2012/styles.css?{CSS_DATE}" />
 		<link rel="stylesheet" type="text/css" href="/global/css/code_styles.css" />
 		<!--[if IE]>
 		<script>
@@ -28,9 +28,6 @@
 				</form>
 			</div>
 		</header>
-		<section id="featured">
-			
-		</section>
 		<section id="main" class="row">
 			<section id="content" class="eightcol">
 				{CONTENT}
@@ -45,6 +42,7 @@
 		<footer>
 			Copyright &copy; 2012 Matt Hackmann
 		</footer>
-		<script type="text/javascript" src="/view/dx2012/scripts.js"></script>
+		<script type="text/javascript" src="/view/dx2012/scripts.js?{JS_DATE}"></script>
+		{GA}
 	</body>
 </html>

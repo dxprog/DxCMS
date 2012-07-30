@@ -2,10 +2,12 @@
 <html>
 	<head>
 		<title>matt hackamnn - web developer</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="viewport" content="initial-scale=1.0, width=device-width, height=device-height, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 		<script type="text/javascript" src="/global/js/jquery.lib.js"></script>
-		<script type="text/javascript" src="/global/js/dx.js"></script>
+		<script type="text/javascript" src="/global/js/dx.js?{JS_DATE}"></script>
 		<link rel="stylesheet" type="text/css" href="/view/dx2012/1140.css" />
-		<link rel="stylesheet" type="text/css" href="/view/dx2012/styles.css" />
+		<link rel="stylesheet" type="text/css" href="/view/dx2012/styles.css?{CSS_DATE}" />
 		<link rel="stylesheet" type="text/css" href="/global/css/code_styles.css" />
 		<!--[if IE]>
 		<script>
@@ -34,5 +36,6 @@
 		<footer>
 			Copyright &copy; 2012 Matt Hackmann
 		</footer>
+		{GA}
 	</body>
 </html>
