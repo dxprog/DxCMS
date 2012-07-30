@@ -291,7 +291,7 @@ namespace Api {
 			// Round up all the returned tags into an array for output
 			$result = Lib\Db::Query($query, $params);
 			while ($row = Lib\Db::Fetch($result)) {
-				$t = null;
+				$t = new stdClass;
 				$t->name = $row->tag_name;
 				$t->count = isset($row->tag_count) ? $row->tag_count : 0;
 				$retVal[] = $t;
@@ -311,7 +311,7 @@ namespace Api {
 			// Get a date for every month/year there was a post
 			$result = Lib\Db::Query('SELECT COUNT(1) AS total, MONTH(FROM_UNIXTIME(content_date)) AS month, YEAR(FROM_UNIXTIME(content_date)) AS year FROM content WHERE content_date <= ' . time() . ' GROUP BY year, month ORDER BY year DESC, month DESC');
 			while ($row = Lib\Db::Fetch($result)) {
-				$t = null;
+				$t = new stdClass;
 				$t->timestamp = mktime(0, 0, 0, $row->month, 1, $row->year) + 3600;
 				$t->text = date("F Y", $t->timestamp);
 				$t->count = $row->total;
@@ -331,7 +331,7 @@ namespace Api {
 			$cacheKey = 'ContentHits';
 			$forceWrite = isset($vars['forceWrite']) ? $vars['forceWrite'] : false;
 			$hits = \Lib\Cache::Get($cacheKey);
-			if (false === $hits || null === $hits) {
+			if (!is_array($hits)) {
 				$hits = array();
 			}
 			
