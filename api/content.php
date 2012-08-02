@@ -664,7 +664,7 @@ namespace Api {
 				$avgComments = (double)Lib\Db::Fetch(Lib\Db::Query('SELECT AVG(comments.count) AS avg_comments FROM (SELECT (SELECT COUNT(1) FROM content x INNER JOIN content p ON p.content_id = x.content_parent WHERE x.content_type="cmmnt" AND x.content_parent=c.content_id AND p.content_type = :type AND x.content_date >= :minDate) AS count FROM content c) AS comments', $params))->avg_comments;				
 			}
 			
-			$avgComments = $avgComments != 0 ? $avgComment : 1;
+			$avgComments = $avgComments != 0 ? $avgComments : 1;
 
 			return floor($avgHits / $avgComments);
 		}
