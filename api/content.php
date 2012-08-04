@@ -82,7 +82,7 @@ namespace Api {
 		public static function getContent($vars) {
 
 			// Get the properties passed
-			$retVal = null;
+			$retVal = new stdClass;
 			$select = isset($vars['select']) ? strlen($vars['select']) > 0 ? $vars['select'] : 'c.*' : 'c.*';
 			$id = isset($vars['id']) ? $vars['id'] : null;
 			$perma = isset($vars['perma']) ? $vars['perma'] : null;
@@ -346,7 +346,7 @@ namespace Api {
 			if (is_numeric($vars['id'])) {
 				
 				// Set up an object with all the info and stuff it into the cached array
-				$obj = null;
+				$obj = new stdClass;
 				$obj->ip = $_SERVER['REMOTE_ADDR'];
 				$obj->id = intVal($vars['id']);
 				$obj->time = time();
@@ -441,7 +441,7 @@ namespace Api {
 				
 				$result = Lib\Db::Query('SELECT COUNT(*) AS total, c.content_id, c.content_title, c.content_perma FROM tags t INNER JOIN content c ON c.content_id=t.content_id WHERE t.tag_name IN (SELECT tag_name FROM tags WHERE content_id=' . $vars['id'] . ') AND c.content_parent=0 AND t.content_id != ' . $vars['id'] . ' GROUP BY content_id ORDER BY total DESC, c.content_date DESC LIMIT 5');
 				while ($row = Lib\Db::Fetch($result)) {
-					$obj = null;
+					$obj = new stdClass;
 					$obj->title = $row->content_title;
 					$obj->perma = $row->content_perma;
 					$retVal[] = $obj;
