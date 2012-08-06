@@ -53,7 +53,7 @@ namespace Controller {
 			return $post;
 		}
 
-		private function _highlightSyntax ($s, $type)
+		private static function _highlightSyntax ($s, $type)
 		{
 			
 			// Highlight based on the language
