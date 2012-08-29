@@ -113,7 +113,7 @@ namespace Controller {
 				
 				// Get user comments if there are any to get
 				if ($post->children > 0) {
-					$comments = Api\Content::getContent(array( 'parent' => $post->id, 'max' => 0, 'order' => 'asc', 'noCount' => true, 'noTags' => true ));
+					$comments = Api\Content::getContent(array( 'parent' => $post->id, 'max' => 0, 'order' => 'asc', 'noCount' => true, 'noTags' => true, 'contentType' => 'cmmnt' ));
 					for ($i = 0, $count = sizeof($comments->content); $i < $count; $i++) {
 						$comments->content[$i] = self::_formatComment($comments->content[$i]);
 					}
@@ -192,7 +192,8 @@ namespace Controller {
 			
 			// Get the user's status
 			$user = self::_getUser();
-			$parent = Api\Content::getIdFromPerma($_GET['perma']);
+			$perma = Lib\Url::Get('perma');
+			$parent = Api\Content::getIdFromPerma($perma);
 			
 			if ($parent) {
 			
@@ -214,20 +215,29 @@ namespace Controller {
 					$sync->meta->user_email = $_POST['email'];
 					$sync->meta->user_name = $_POST['name'];
 					$sync->meta->user_avatar = $user->avatar;
-					if ($_POST['botProof'] != md5($sync->meta->user_email)) {
-						echo 'We don\'t serve your kind';
-						exit;
+
+					// Akismet spam check
+					$akismetKey = Lib\DX::GetOption('akismet_key');
+					if ($akismetKey) {
+						$host = parse_url($GLOBALS['_baseURI']);
+						$port = strlen($host['port']) > 0 && $host['port'] != '80' ? ':' . $host['port'] : '';
+						$host = $host['scheme'] . '://' . $host['host'] . $port;
+						if (Lib\Akismet::checkCommentSpam($host . '/', $akismetKey, $sync->meta->user_name, $sync->meta->user_email, $host . '/entry/' . $perma, $sync->body)) {
+							$sync->type = 'spam';
+							$sync->parent = 0;
+							$sync->meta->parent = $parent;
+						}
 					}
+					
 				} else {
 					$sync->meta->user_name = $user->user_name;
 					$sync->meta->user_avatar = $user->avatar;
 					$sync->meta->user_auth = $user->auth_type;
 				}
-
+				
 				// If all is good
 				if ($sync->body) {
 					$ret = Api\Content::syncContent(null, $sync);
-					var_dump($ret);
 					if (null !== $ret) {
 						// Clear the cache for this post
 						Lib\Dx::call('content', 'getContent', array('perma'=>$_GET['perma']), 0);
