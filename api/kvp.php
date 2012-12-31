@@ -65,8 +65,8 @@ namespace Api {
 			$retVal = null;
 			if (defined('API_LOCATION') && API_LOCATION == '_internal') {
 				$retVal = array();
-				$result = Db::Query('SELECT * FROM kvps');
-				while ($row = Db::Fetch($result)) {
+				$result = Lib\Db::Query('SELECT * FROM kvps');
+				while ($row = Lib\Db::Fetch($result)) {
 					$retVal[] = new KVP($row->kvp_key, unserialize($row->kvp_value));
 				}
 			}
@@ -91,14 +91,14 @@ namespace Api {
 			if (null !== $key && null !== $value) {
 			
 				// Check to see if the key already exists
-				$result = Db::Query('SELECT kvp_key FROM kvps WHERE kvp_key=:key', array(':key'=>$key));
+				$result = Lib\Db::Query('SELECT kvp_key FROM kvps WHERE kvp_key=:key', array(':key'=>$key));
 				$params = array(':key'=>$key, ':value'=>$value);
 				if ($result->count == 1) {
 					$query = 'UPDATE kvps SET kvp_value=:value WHERE kvp_key=:key';
 				} else {
 					$query = 'INSERT INTO kvps VALUES (:key, :value)';
 				}
-				$retVal = Db::Query($query, $params) != 0;
+				$retVal = Lib\Db::Query($query, $params) != 0;
 				
 			}
 			
