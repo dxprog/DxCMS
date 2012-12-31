@@ -25,7 +25,7 @@ namespace Lib {
 		public static function Set($key, $val, $expiration = 600) {
 			$retVal = false;
 			if (null != self::$_conn && $key) {
-				$retVal = self::$_conn->set(md5($key), $val, null, time() + $expiration);
+				$retVal = self::$_conn->set($key, $val, null, time() + $expiration);
 			}
 			return $retVal;
 		}
@@ -33,7 +33,7 @@ namespace Lib {
 		public static function Get($key) {
 			$retVal = false;
 			if (null != self::$_conn && $key && !isset($_GET['flushCache'])) {
-				$retVal = self::$_conn->get(md5($key));
+				$retVal = self::$_conn->get($key);
 			}
 			return $retVal;
 		}
