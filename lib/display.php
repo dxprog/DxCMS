@@ -38,6 +38,7 @@ namespace Lib {
 					}
 				}
 				
+				header('Content-Type: text/html; charset=utf-8');
 				echo $out;
 				self::$_rendered = true;
 			}
@@ -92,8 +93,7 @@ namespace Lib {
 					
 					// If the incoming data is an object, serialize it before continuing
 					if (!is_string($data)) {
-						$xs = new SerializeXML();
-						$parseXml = $xs->serialize($data, $template);
+						$parseXml = SerializeXML::serialize($data, $template);
 					} else {
 						$parseXml = $data;
 					}
