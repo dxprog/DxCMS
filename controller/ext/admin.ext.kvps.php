@@ -2,14 +2,14 @@
 
 function showContentKvps($type) {
 
-	$obj = Dx::call('kvp', 'getall', null, 0);
-	return Display::compile($obj->body, 'admin_kvps_overview');
+	$obj = Api\KVP::GetAll();
+	return Lib\Display::compile($obj->body, 'admin_kvps_overview');
 
 }
 
 function newContentKvps($type) {
 	
-	return Display::compile(null, 'admin_kvps_create');
+	return Lib\Display::compile(null, 'admin_kvps_create');
 	
 }
 
@@ -17,7 +17,7 @@ function syncContentKvps($type, $id = null) {
 
 	$key = $_POST['key'];
 	$value = $_POST['value'];
-	if (Dx::post('kvp', 'set', array('key'=>$key), $value) === true) {
+	if (Lib\Dx::post('kvp', 'set', array('key'=>$key), $value) === true) {
 		header('Location', '/admin/kvps/overview');
 	};
 
@@ -25,10 +25,11 @@ function syncContentKvps($type, $id = null) {
 
 function editContentKvps($type, $key) {
 	
-	$result = Dx::call('kvp', 'get', array('key'=>$key), 0);
-	$obj = null;
+	$result = Api\KVP::Get(array( 'key'=>$key ));
+	echo $key;
+	$obj = new stdClass;
 	$obj->value = $result->body;
 	$obj->key = $key;
-	return Display::compile($obj, 'admin_kvps_create');
+	return Lib\Display::compile($obj, 'admin_kvps_create');
 	
 }
