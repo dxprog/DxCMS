@@ -9,6 +9,8 @@ namespace Controller {
 	
 		public static function render() {
 			
+			global $_title;
+			
 			Lib\Display::setTemplate('comic');
 			$perma = Lib\Url::Get('perma');
 			
@@ -22,7 +24,7 @@ namespace Controller {
 			// Render
 			if (null != $comic) {
 				Api\Content::logContentView(array( 'id'=>$comic->id ));
-				Lib\Display::setVariable('title', $comic->title);
+				Lib\Display::setVariable('title', $comic->title . ' - ' . $_title);
 				$comic = Lib\Display::compile($comic, 'comic');
 				Lib\Display::setVariable('content', $comic);
 			} else {
