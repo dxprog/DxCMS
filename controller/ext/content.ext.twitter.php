@@ -26,7 +26,7 @@ namespace Controller {
 				$cacheKey = 'sidebar_twitter';
 				$retVal = Lib\Cache::Get($cacheKey);
 				if (false === $retVal) {
-					$data = @file_get_contents('http://twitter.com/statuses/user_timeline.json?screen_name='.$twitter_user.'&count=2');
+					$data = @file_get_contents('http://api.twitter.com/1/statuses/user_timeline.json?screen_name='.$twitter_user.'&count=2');
 					if ($data) {
 						$data = json_decode($data);
 						$data = $data[0];
@@ -39,7 +39,7 @@ namespace Controller {
 				}
 			}
 			
-			return $retVal;			
+			return $retVal;
 		}
 
 		private static function _makeTwitterRelativeTime($ts) {
