@@ -2,6 +2,8 @@
 
 namespace Lib {
 
+	use Exception;
+
 	class Url {
 		
 		/**
@@ -125,16 +127,28 @@ namespace Lib {
 		/**
 		 * Gets the requested item off the query string if it exists
 		 */
-		public static function Get($param, $default = false) {
-			return isset($_GET[$param]) ? $_GET[$param] : $default;
+		public static function Get($param, $default = false, $source = null) {
+			$source = $source ?: $_GET;
+			return isset($source[$param]) ? $source[$param] : $default;
 		}
 		
 		/**
 		 * Gets an int value off the query string. If the value exists but is NaN, returns null
 		 */
-		public static function GetInt($param, $default = 0) {
-			return isset($_GET[$param]) && is_numeric($_GET[$param]) ? intVal($_GET[$param]) : $default;
+		public static function GetInt($param, $default = 0, $source = null) {
+			$source = $source ?: $_GET;
+			return isset($source[$param]) && is_numeric($source[$param]) ? intVal($source[$param]) : $default;
 		}
+		
+		/**
+		 * Gets a bool value off the query string
+		 */
+		public static function GetBool($param, $source = null) {
+			$source = $source ?: $_GET;
+			return isset($source[$param]) && ($source[$param] === true || strtolower($source[$param]) === 'true') ? true : false;
+		}
+		
+		
 
 	}
 	
