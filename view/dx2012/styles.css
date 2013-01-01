@@ -47,6 +47,8 @@ header .search button { width:24px; height:0; padding:24px 0 0; overflow:hidden;
 .post footer a, #comments footer a { color:#025159; }
 .post footer a:hover, #comments footer a:hover { text-decoration:none; }
 .post .more { text-align:right; display:block; padding-bottom:10px; }
+.post ul { margin:10px 0; padding-left:20px; list-style:disc; }
+.post li { margin:2px 0; }
 
 .imageTease { padding:5px; box-shadow:0 1px 5px #888; }
 .imageTease a { position:relative; overflow:hidden; height:150px; display:block; }
@@ -173,7 +175,7 @@ div#galleryItem { height:625px; width:0; margin:0 auto; background:#fff; positio
 #contact ul li a.youtube { background-position: 0px -224px; }
 #contact ul li a.deviantart { background-position: 0px -256px; }
 
-.information, .questions { margin-left:25px; overflow:none; }
+.information, .questions { margin-left:25px; overflow:visible; }
 .information img { float:left; width:250px; padding-right:10px; }
 .information p, .questions p { margin:0 0 10px; line-height:1.4; font-size:16px; }
 .questions time { text-align:right; font-size:12px; color:#666; display:block; }
@@ -196,6 +198,8 @@ ol.search img { float:left; height:100px; box-shadow:0 1px 5px #888; margin:0 10
 #error { width:600px; margin:0 auto; }
 #error img { float:left; padding:0 15px 0 0; }
 #error h2 { text-transform:uppercase; font:bold 36px 'Trebuchet MS', sans-serif; padding:60px 0 0; }
+
+.youtube { height:304px; }
 
 @media screen and (max-width:1024px) {
 	h1 { font-size:20px; }
