@@ -4,24 +4,40 @@ namespace Lib {
 
 	class SerializeXML {
 
-		public function serialize($object, $root = 'root') {
+		public static function serialize($object, $root = 'root') {
 			
-			return '<?xml version="1.0" encoding="utf-8"?>' . $this->_serializeItem($object, $root);
+			return '<?xml version="1.0" encoding="utf-8"?>' . self::_serializeItem($object, $root);
 			
 		}
 		
-		private function _serializeItem($item, $root, $attributes = '') {
+		private static function _serializeItem($item, $root, $attributes = '') {
 			
 			$retVal = '<' . $root . $attributes . '>';
 			
 			if (null === $item) {
 				$retVal .= 'null';
-			} elseif (is_object($item) || is_array($item)) {
+			} elseif (is_object($item)) {
+				
+				if (method_exists($item, 'serializeXml')) {
+					$retVal .= $item->serializeXml();
+				} else {
+					foreach ($item as $key=>$val) {
+						$elName = is_numeric($key) ? $root . '_item' : $key;
+						$elAttr = is_numeric($key) ? ' index="' . $key . '"' : '';
+						$retVal .= self::_serializeItem($val, $elName, $elAttr);
+					}
+				}
+				
+			} else if (is_array($item)) {
 				
 				foreach ($item as $key=>$val) {
-					$elName = is_numeric($key) ? $root . '_item' : $key;
-					$elAttr = is_numeric($key) ? ' index="' . $key . '"' : '';
-					$retVal .= $this->_serializeItem($val, $elName, $elAttr);
+					if (is_object($val) && method_exists($val, 'serializeXml')) {
+						$retVal .= $val->serializeXml();
+					} else {
+						$elName = is_numeric($key) ? $root . '_item' : $key;
+						$elAttr = is_numeric($key) ? ' index="' . $key . '"' : '';
+						$retVal .= self::_serializeItem($val, $elName, $elAttr);
+					}
 				}
 				
 			} elseif (is_bool($item)) {
