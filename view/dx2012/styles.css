@@ -218,6 +218,9 @@ ol.search img { float:left; height:100px; box-shadow:0 1px 5px #888; margin:0 10
 	.post dt { font-weight:bold; padding-left:15px; }
 	.post dt:first-child { padding-left:0; }
 	.post dd { padding-left:5px; }
+	#comments, #addComment { padding:0; margin:0;  }
+	#comments h3, #addComment h3 { position:static; color:#000; background:#fff; width:100%;  }
+	#addComment textarea { width:100%; }
 }
 
 @media screen and (max-width:600px) {
